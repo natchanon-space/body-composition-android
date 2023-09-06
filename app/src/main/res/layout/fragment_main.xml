@@ -5,7 +5,6 @@
     tools:context="com.example.bodycomposition.fragment.MainFragment">
 
     <data>
-
         <variable
             name="mainFragment"
             type="com.example.bodycomposition.fragment.MainFragment" />

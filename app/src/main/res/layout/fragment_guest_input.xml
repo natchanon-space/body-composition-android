@@ -6,7 +6,12 @@
     tools:context=".fragment.GuestInputFragment">
 
     <data>
-
+        <variable
+            name="guestInputFragment"
+            type="com.example.bodycomposition.fragment.GuestInputFragment" />
+        <variable
+            name="dataViewModel"
+            type="com.example.bodycomposition.model.DataViewModel" />
     </data>
 
     <RelativeLayout
@@ -35,6 +40,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Height" />
@@ -46,6 +52,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Date of Birth" />
@@ -59,7 +66,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/input_pack"
             android:layout_alignParentRight="true"
-            android:text="@string/general_next_button_text" />
+            android:text="@string/general_next_button_text"
+            android:onClick="@{() -> guestInputFragment.onSubmit()}"
+            />
     </RelativeLayout>
 
 </layout>
