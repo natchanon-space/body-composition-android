@@ -1,63 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.bodycomposition.fragment.MainFragment">
 
     <data>
+
         <variable
             name="mainFragment"
             type="com.example.bodycomposition.fragment.MainFragment" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/text_app_name"
             android:layout_width="222dp"
             android:layout_height="83dp"
-            android:layout_marginTop="16dp"
             android:text="@string/app_name"
             android:textAlignment="center"
             android:textSize="34sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="TextSizeCheck" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:onClick="@{() -> mainFragment.goToLogin()}"
+                android:text="@string/login_button_text" />
+
+            <Button
+                android:id="@+id/button_guest"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:onClick="@{() -> mainFragment.goToGuestInput()}"
+                android:text="@string/guest_button_text" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/text_link_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/register_button_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_guest" />
+            android:text="@string/register_button_text" />
+    </LinearLayout>
 
-        <Button
-            android:id="@+id/button_guest"
-            android:onClick="@{() -> mainFragment.goToGuestInput()}"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/guest_button_text"
-            app:layout_constraintEnd_toEndOf="@+id/text_app_name"
-            app:layout_constraintTop_toBottomOf="@+id/text_app_name" />
-
-        <Button
-            android:id="@+id/button_login"
-            android:onClick="@{() -> mainFragment.goToLogin()}"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/login_button_text"
-            app:layout_constraintStart_toStartOf="@+id/text_app_name"
-            app:layout_constraintTop_toBottomOf="@+id/text_app_name" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
