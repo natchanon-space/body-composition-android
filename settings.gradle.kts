@@ -15,4 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Body Composition"
 include(":app")
- 
+include(":mylibrary")
+include(":ICDeviceManager")

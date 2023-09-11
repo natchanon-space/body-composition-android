@@ -58,5 +58,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-
+    // BLE Device
+    implementation(project(":ICDeviceManager"))
+//    implementation("com.android.support:appcompat-v7")
 }
