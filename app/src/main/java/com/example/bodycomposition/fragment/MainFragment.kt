@@ -56,7 +56,7 @@ class MainFragment : Fragment() {
         // Observe LiveData updates
         binding.lifecycleOwner = viewLifecycleOwner
 
-        binding?.apply {
+        binding.apply {
             mainFragment = this@MainFragment
         }
     }
@@ -81,5 +81,9 @@ class MainFragment : Fragment() {
 
     fun goToFaceRegistration() {
         findNavController().navigate(R.id.action_mainFragment_to_faceRegistrationFragment)
+    }
+
+    companion object {
+        private const val TAG = "MainFragment"
     }
 }

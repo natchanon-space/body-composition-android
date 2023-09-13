@@ -1,13 +1,11 @@
 package com.example.bodycomposition.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.bodycomposition.R
 import com.example.bodycomposition.databinding.FragmentGuestInputBinding
@@ -45,5 +43,9 @@ class GuestInputFragment : Fragment() {
             height = binding.height.text.toString()
         )
         findNavController().navigate(R.id.action_guestInputFragment_to_visualizeFragment)
+    }
+
+    companion object {
+        private const val TAG = "GuestInputFragment"
     }
 }

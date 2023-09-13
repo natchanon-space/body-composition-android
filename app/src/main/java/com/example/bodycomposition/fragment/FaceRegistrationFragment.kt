@@ -74,7 +74,7 @@ import java.util.concurrent.ExecutorService
 
             imageCapture = ImageCapture.Builder().build()
 
-            var imageAnalysis = ImageAnalysis.Builder()
+            val imageAnalysis = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
             imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(requireContext()), this)
@@ -100,19 +100,18 @@ import java.util.concurrent.ExecutorService
     override fun analyze(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
 
-        Log.d("FaceReg", imageProxy.imageInfo.toString())
-
         if (mediaImage != null) {
+            // Prepare input image using CameraX
             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
+            // Get base face detection model
             val detector = FaceDetection.getClient()
 
-            val result = detector.process(image)
+            // Event listener for image processing
+            detector.process(image)
                 .addOnSuccessListener { faces: List<Face> ->
-
-                    val faceBounds: MutableList<RectF> = arrayListOf()
-
                     // Drawing face bounding box on overlay
+                    val faceBounds: MutableList<RectF> = arrayListOf()
                     val rotation = imageProxy.imageInfo.rotationDegrees
                     val reverseDimens = rotation == 90 || rotation == 270
                     val width = if (reverseDimens) imageProxy.height else imageProxy.width
@@ -126,7 +125,8 @@ import java.util.concurrent.ExecutorService
                     // Close before starting new image analysis
                     imageProxy.close()
                 }
-                .addOnFailureListener { _ ->
+                .addOnFailureListener {
+                    Log.e(TAG, it.toString(), it)
                     imageProxy.close()
                 }
         }
@@ -147,5 +147,9 @@ import java.util.concurrent.ExecutorService
         val scaleBottom = scaleY * bottom
 
         return RectF(scaledLeft, scaledTop, scaleRight, scaleBottom)
+    }
+
+    companion object {
+        private const val TAG = "FaceRegistrationFragment"
     }
 }

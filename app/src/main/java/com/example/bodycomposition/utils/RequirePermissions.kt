@@ -7,6 +7,7 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 
 object RequirePermissions {
+    // All necessary permissions
     val REQUIRED_PERMISSIONS =
         mutableListOf (
             Manifest.permission.CAMERA,

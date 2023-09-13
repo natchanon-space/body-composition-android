@@ -25,7 +25,7 @@ class BBoxOverlay(context: Context?, attributesSet: AttributeSet?): View(context
         canvas.apply {
             faceBoundingBox.forEach {
                 drawRect(it, paint)
-                Log.d(TAG, "Draw bbox ${it.toString()}")
+                Log.d(TAG, "Draw bounding box: $it")
             }
         }
     }
