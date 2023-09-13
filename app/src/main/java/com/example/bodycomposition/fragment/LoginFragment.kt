@@ -1,6 +1,5 @@
 package com.example.bodycomposition.fragment
 
-import android.Manifest
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.os.Build
@@ -20,6 +19,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.bodycomposition.databinding.FragmentLoginBinding
+import com.example.bodycomposition.utils.Constant.REQUIRED_PERMISSIONS
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -177,13 +177,5 @@ class LoginFragment : Fragment() {
     companion object {
         private const val TAG = "FaceRecLogin"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private val REQUIRED_PERMISSIONS =
-            mutableListOf (
-                Manifest.permission.CAMERA,
-            ).apply {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                }
-            }.toTypedArray()
     }
 }

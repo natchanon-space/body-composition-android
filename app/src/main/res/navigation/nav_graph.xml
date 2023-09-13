@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mainFragment_to_guestInputFragment"
             app:destination="@id/guestInputFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_faceRegistrationFragment"
+            app:destination="@id/faceRegistrationFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -36,4 +39,13 @@
         android:name="com.example.bodycomposition.fragment.VisualizeFragment"
         android:label="fragment_visualize"
         tools:layout="@layout/fragment_visualize" />
+    <fragment
+        android:id="@+id/faceRegistrationFragment"
+        android:name="com.example.bodycomposition.fragment.FaceRegistrationFragment"
+        android:label="fragment_face_registration"
+        tools:layout="@layout/fragment_face_registration" >
+        <action
+            android:id="@+id/action_faceRegistrationFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>
