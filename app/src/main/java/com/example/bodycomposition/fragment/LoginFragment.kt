@@ -1,7 +1,6 @@
 package com.example.bodycomposition.fragment
 
 import android.content.ContentValues
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -19,7 +18,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.bodycomposition.databinding.FragmentLoginBinding
-import com.example.bodycomposition.utils.Constant.REQUIRED_PERMISSIONS
+import com.example.bodycomposition.utils.RequirePermissions.REQUIRED_PERMISSIONS
+import com.example.bodycomposition.utils.RequirePermissions.allPermissionsGranted
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -74,10 +74,10 @@ class LoginFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Request camera permissions
-        if (allPermissionsGranted()) {
+        if (allPermissionsGranted(requireContext())) {
             startCamera()
         } else {
-            requestPermissions()
+            // TODO: add handler
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -158,15 +158,6 @@ class LoginFragment : Fragment() {
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))
-    }
-
-    private fun requestPermissions() {
-        activityResultLauncher.launch(REQUIRED_PERMISSIONS)
-    }
-
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            requireContext(), it) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onDestroy() {
