@@ -53,8 +53,10 @@ import java.util.concurrent.ExecutorService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (RequirePermissions.allPermissionsGranted(requireContext())) {
+        if (RequirePermissions.allPermissionsGranted(this)) {
             startCamera()
+        } else {
+            RequirePermissions.requestPermissions(this)
         }
     }
 

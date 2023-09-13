@@ -17,7 +17,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.bodycomposition.databinding.FragmentLoginBinding
-import com.example.bodycomposition.utils.RequirePermissions.allPermissionsGranted
+import com.example.bodycomposition.utils.RequirePermissions
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -53,10 +53,10 @@ class LoginFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Request camera permissions
-        if (allPermissionsGranted(requireContext())) {
+        if (RequirePermissions.allPermissionsGranted(this)) {
             startCamera()
         } else {
-            // TODO: add handler
+            RequirePermissions.requestPermissions(this)
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()

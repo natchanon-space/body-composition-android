@@ -5,8 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -14,32 +12,13 @@ import com.example.bodycomposition.R
 import com.example.bodycomposition.databinding.FragmentMainBinding
 import com.example.bodycomposition.model.DataViewModel
 import com.example.bodycomposition.model.UserType
-import com.example.bodycomposition.utils.RequirePermissions.REQUIRED_PERMISSIONS
+import com.example.bodycomposition.utils.RequirePermissions
 
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
     private val viewModel: DataViewModel by activityViewModels()
-
-    private val activityResultLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions())
-        { permissions ->
-            // Handle Permission granted/rejected
-            var permissionGranted = true
-            permissions.entries.forEach {
-                if (it.key in REQUIRED_PERMISSIONS && !it.value)
-                    permissionGranted = false
-            }
-            if (!permissionGranted) {
-                Toast.makeText(requireContext(),
-                    "Permission request denied",
-                    Toast.LENGTH_SHORT).show()
-            } else {
-                // TODO: add something e.g. exit the app or ask again
-            }
-        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,7 +44,9 @@ class MainFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Request permissions on create
-        activityResultLauncher.launch(REQUIRED_PERMISSIONS)
+        if (!RequirePermissions.allPermissionsGranted(this)) {
+            RequirePermissions.requestPermissions(this)
+        }
     }
 
     fun goToGuestInput() {
