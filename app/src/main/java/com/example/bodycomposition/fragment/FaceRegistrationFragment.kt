@@ -1,5 +1,7 @@
 package com.example.bodycomposition.fragment
 
+import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +19,7 @@ import androidx.fragment.app.Fragment
 import com.example.bodycomposition.databinding.FragmentFaceRegistrationBinding
 import com.example.bodycomposition.utils.RequirePermissions
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import java.util.concurrent.ExecutorService
 
@@ -105,19 +108,44 @@ import java.util.concurrent.ExecutorService
             val detector = FaceDetection.getClient()
 
             val result = detector.process(image)
-                .addOnSuccessListener { faces ->
-                    for (face in faces) {
-                        val bounds = face.boundingBox
+                .addOnSuccessListener { faces: List<Face> ->
 
-                        Log.d("FaceReg", bounds.flattenToString())
+                    val faceBounds: MutableList<RectF> = arrayListOf()
+
+                    // Drawing face bounding box on overlay
+                    val rotation = imageProxy.imageInfo.rotationDegrees
+                    val reverseDimens = rotation == 90 || rotation == 270
+                    val width = if (reverseDimens) imageProxy.height else imageProxy.width
+                    val height = if (reverseDimens) imageProxy.width else imageProxy.height
+                    for (face in faces) {
+                        val bounds = face.boundingBox.transform(width, height)
+                        faceBounds.add(RectF(bounds))
                     }
+                    binding.overlay.drawBox(faceBounds)
 
                     // Close before starting new image analysis
                     imageProxy.close()
                 }
                 .addOnFailureListener { _ ->
-
+                    imageProxy.close()
                 }
         }
+    }
+
+    private fun Rect.transform(width: Int, height: Int): RectF {
+        val scaleX = binding.viewFinder.width / width.toFloat()
+        val scaleY = binding.viewFinder.height / height.toFloat()
+
+        // Flip for front camera len
+        val flippedLeft = width - right
+        val flippedRight = width - left
+
+        // Scale all coordinates to match preview
+        val scaledLeft = scaleX * flippedLeft
+        val scaledTop = scaleY * top
+        val scaleRight = scaleX * flippedRight
+        val scaleBottom = scaleY * bottom
+
+        return RectF(scaledLeft, scaledTop, scaleRight, scaleBottom)
     }
 }
