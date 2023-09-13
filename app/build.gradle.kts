@@ -70,4 +70,7 @@ dependencies {
     // BLE Device
     implementation(project(":ICDeviceManager"))
     // implementation("com.android.support:appcompat-v7")
+
+    // ML Kit
+    implementation("com.google.mlkit:face-detection:16.1.5")
 }
