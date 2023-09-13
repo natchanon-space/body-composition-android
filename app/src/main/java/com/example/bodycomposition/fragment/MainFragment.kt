@@ -11,8 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.bodycomposition.R
 import com.example.bodycomposition.databinding.FragmentMainBinding
 import com.example.bodycomposition.model.DataViewModel
-import com.example.bodycomposition.model.UserType
 import com.example.bodycomposition.utils.RequirePermissions
+import com.example.bodycomposition.utils.UserType
 
 class MainFragment : Fragment() {
 

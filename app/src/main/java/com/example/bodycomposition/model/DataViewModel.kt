@@ -1,15 +1,9 @@
 package com.example.bodycomposition.model
 
-import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.util.Date
-
-enum class UserType {
-    GUEST,
-    AUTH
-}
+import com.example.bodycomposition.utils.UserType
 
 class DataViewModel : ViewModel() {
 
