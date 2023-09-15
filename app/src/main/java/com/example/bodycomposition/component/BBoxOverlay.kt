@@ -38,6 +38,11 @@ class BBoxOverlay(context: Context?, attributesSet: AttributeSet?): View(context
         invalidate()
     }
 
+    fun clearBox() {
+        faceBoundingBox.clear()
+        invalidate()
+    }
+
     companion object {
         private const val TAG = "BBoxOverlay"
     }

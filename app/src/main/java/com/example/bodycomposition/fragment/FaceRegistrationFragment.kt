@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageFormat
+import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.YuvImage
@@ -28,6 +29,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.bodycomposition.databinding.FragmentFaceRegistrationBinding
+import com.example.bodycomposition.recogniser.FaceRecognitionProcessor
 import com.example.bodycomposition.utils.RequirePermissions
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
@@ -47,6 +49,8 @@ import java.util.concurrent.ExecutorService
 
     private lateinit var cameraExecutor: ExecutorService
 
+    private lateinit var faceRecognitionProcessor: FaceRecognitionProcessor
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,6 +64,8 @@ import java.util.concurrent.ExecutorService
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
+
+        faceRecognitionProcessor = FaceRecognitionProcessor(binding.overlay, binding.viewFinder)
 
         binding.apply {
             faceRegistrationFragment = this@FaceRegistrationFragment
@@ -122,18 +128,28 @@ import java.util.concurrent.ExecutorService
 
                     if (mediaImage != null) {
                         // Prepare input image using CameraX
-                        val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-
+                        val bitmap = imageProxy.convertImageProxyToBitmap()
+                        val inputImage = InputImage.fromBitmap(bitmap, 0)
                         // Get base face detection model
                         val detector = FaceDetection.getClient()
 
                         // Event listener for image processing
-                        detector.process(image)
+                        detector.process(inputImage)
                             .addOnSuccessListener { faces: List<Face> ->
                                 // Drawing face bounding box on overlay
                                 val faceBounds: MutableList<Rect> = arrayListOf()
                                 for (face in faces) {
                                     // TODO: Crop only face
+                                    val croppedBitmap = cropToBBox(bitmap, face.boundingBox, imageProxy.imageInfo.rotationDegrees)
+
+                                    // TODO: Remove after implement FaceNet
+                                    if (croppedBitmap != null) {
+                                        saveMediaToStorage(croppedBitmap)
+                                        Log.d(TAG, "crop image saved!")
+                                    } else {
+                                        Toast.makeText(requireContext(), "Cropped image is null!", Toast.LENGTH_SHORT)
+                                        Log.d(TAG, "crop image null")
+                                    }
 
                                     // TODO: Passing to model, retrieve feature vector
                                 }
@@ -157,38 +173,7 @@ import java.util.concurrent.ExecutorService
     }
 
     override fun analyze(imageProxy: ImageProxy) {
-        val mediaImage = imageProxy.image
-
-        if (mediaImage != null) {
-            // Prepare input image using CameraX
-            val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-
-            // Get base face detection model
-            val detector = FaceDetection.getClient()
-
-            // Event listener for image processing
-            detector.process(image)
-                .addOnSuccessListener { faces: List<Face> ->
-                    // Drawing face bounding box on overlay
-                    val faceBounds: MutableList<RectF> = arrayListOf()
-                    val rotation = imageProxy.imageInfo.rotationDegrees
-                    val reverseDimens = rotation == 90 || rotation == 270
-                    val width = if (reverseDimens) imageProxy.height else imageProxy.width
-                    val height = if (reverseDimens) imageProxy.width else imageProxy.height
-                    for (face in faces) {
-                        val bounds = face.boundingBox.transform(width, height)
-                        faceBounds.add(RectF(bounds))
-                    }
-                    binding.overlay.drawBox(faceBounds)
-
-                    // Close before starting new image analysis
-                    imageProxy.close()
-                }
-                .addOnFailureListener {
-                    Log.e(TAG, it.toString(), it)
-                    imageProxy.close()
-                }
-        }
+        faceRecognitionProcessor.liveDetect(imageProxy)
     }
 
     fun ImageProxy.convertImageProxyToBitmap(): Bitmap {
@@ -217,6 +202,25 @@ import java.util.concurrent.ExecutorService
         val imageBytes = outputStream.toByteArray()
 
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+    }
+
+    private fun cropToBBox(image: Bitmap, boundingBox: Rect, rotation: Int): Bitmap? {
+        var image = image
+        val shift = 0
+        if (rotation != 0) {
+            val matrix = Matrix()
+            matrix.postRotate(rotation.toFloat())
+            image = Bitmap.createBitmap(image, 0, 0, image.width, image.height, matrix, true)
+        }
+        return if (boundingBox.top >= 0 && boundingBox.bottom <= image.width && boundingBox.top + boundingBox.height() <= image.height && boundingBox.left >= 0 && boundingBox.left + boundingBox.width() <= image.width) {
+            Bitmap.createBitmap(
+                image,
+                boundingBox.left,
+                boundingBox.top + shift,
+                boundingBox.width(),
+                boundingBox.height()
+            )
+        } else null
     }
 
     fun saveMediaToStorage(bitmap: Bitmap) {
