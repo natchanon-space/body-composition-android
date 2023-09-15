@@ -32,6 +32,8 @@ class AddFaceFragment : Fragment() {
 
         Log.d(TAG, "(onViewCreated) has faceBitmap ${viewModel.faceBitmap.value != null}")
 
+        binding.imageView.setImageBitmap(viewModel.faceBitmap.value)
+
         binding.apply {
             addFaceFragment = this@AddFaceFragment
             viewModel = this.viewModel
