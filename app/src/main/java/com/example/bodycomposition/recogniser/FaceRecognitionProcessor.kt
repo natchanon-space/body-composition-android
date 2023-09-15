@@ -20,15 +20,21 @@ import java.io.FileOutputStream
 import java.time.LocalDate
 
 
-class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: PreviewView? = null) {
+class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: PreviewView? = null, callback: FaceRecognitionCallback) {
+
+    interface FaceRecognitionCallback {
+        fun onFaceDetected(faceBitmap: Bitmap?)
+    }
 
     private var detector: FaceDetector
     private val overlay: BBoxOverlay?
     private val previewView: PreviewView?
+    private val callback: FaceRecognitionCallback
 
     init {
         this.overlay = overlay
         this.previewView = previewView
+        this.callback = callback
 
         val faceDetectorOptions = FaceDetectorOptions.Builder()
             .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
@@ -106,6 +112,9 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
                     Log.d(TAG, "(cropBiggestFace) No face detected!")
                     imageProxy.close()
                 }
+            }
+            .addOnCompleteListener {
+                callback.onFaceDetected(croppedBitmap)
             }
 
         return croppedBitmap

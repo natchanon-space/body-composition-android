@@ -1,11 +1,13 @@
 package com.example.bodycomposition.fragment
 
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
@@ -22,14 +24,12 @@ import com.example.bodycomposition.R
 import com.example.bodycomposition.databinding.FragmentFaceRegistrationBinding
 import com.example.bodycomposition.model.FaceRegistrationViewModel
 import com.example.bodycomposition.recogniser.FaceRecognitionProcessor
+import com.example.bodycomposition.recogniser.FaceRecognitionProcessor.FaceRecognitionCallback
 import com.example.bodycomposition.utils.RequirePermissions
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 
 
-@ExperimentalGetImage class FaceRegistrationFragment : Fragment(), ImageAnalysis.Analyzer {
+@ExperimentalGetImage class FaceRegistrationFragment : Fragment(), ImageAnalysis.Analyzer, FaceRecognitionCallback {
 
     private lateinit var binding: FragmentFaceRegistrationBinding
 
@@ -55,7 +55,7 @@ import java.util.concurrent.ExecutorService
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
 
-        faceRecognitionProcessor = FaceRecognitionProcessor(binding.overlay, binding.viewFinder)
+        faceRecognitionProcessor = FaceRecognitionProcessor(binding.overlay, binding.viewFinder, this)
 
         binding.apply {
             faceRegistrationFragment = this@FaceRegistrationFragment
@@ -111,28 +111,13 @@ import java.util.concurrent.ExecutorService
         imageCapture?.takePicture(
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageCapturedCallback() {
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onCaptureSuccess(imageProxy: ImageProxy) {
                     Log.d(TAG, "==TAKE PICTURE STARTING==")
 
-                    var croppedBitmap: Bitmap? = null
 
-                    // TODO: Fix early navigation call
-                    GlobalScope.launch(Dispatchers.Main) {
-                        Log.d(TAG, "Suspend 1: crop image")
-                        croppedBitmap = faceRecognitionProcessor.cropBiggestFace(imageProxy)
-                    }
-                        .invokeOnCompletion {
-                            Log.d(TAG, "Suspend 2: register value")
-
-                            if (croppedBitmap != null) {
-                                viewModel.setFaceBitmap(croppedBitmap)
-                            } else {
-                                Log.d(TAG, "CroppedBitmap is null!")
-                            }
-
-                            Log.d(TAG, "Navigate is called!")
-                            findNavController().navigate(R.id.action_faceRegistrationFragment_to_addFaceFragment)
-                        }
+                    Log.d(TAG, "Suspend 1: crop image")
+                    faceRecognitionProcessor.cropBiggestFace(imageProxy)
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -154,5 +139,19 @@ import java.util.concurrent.ExecutorService
 
     companion object {
         private const val TAG = "FaceRegistrationFragment"
+    }
+
+    override fun onFaceDetected(faceBitmap: Bitmap?) {
+
+        Log.d(TAG, "Suspend 2: register value")
+
+        if (faceBitmap != null) {
+            viewModel.setFaceBitmap(faceBitmap)
+        } else {
+            Log.d(TAG, "CroppedBitmap is null!")
+        }
+
+        Log.d(TAG, "Navigate is called!")
+        findNavController().navigate(R.id.action_faceRegistrationFragment_to_addFaceFragment)
     }
 }

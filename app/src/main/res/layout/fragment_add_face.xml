@@ -4,6 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragment.AddFaceFragment">
 
+    <data>
+        <variable
+            name="addFaceFragment"
+            type="com.example.bodycomposition.fragment.AddFaceFragment" />
+        <variable
+            name="viewModel"
+            type="com.example.bodycomposition.model.FaceRegistrationViewModel" />
+    </data>
+
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
