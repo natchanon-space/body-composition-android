@@ -116,29 +116,24 @@ import java.util.concurrent.ExecutorService
 
                     var croppedBitmap: Bitmap? = null
 
-                    // TODO: Solve navigate call before finish problem
+                    // TODO: Fix early navigation call
                     GlobalScope.launch(Dispatchers.Main) {
-                        launch {
-                            suspend {
-                                Log.d(TAG, "Suspend 1: crop image")
-                                croppedBitmap = faceRecognitionProcessor.cropBiggestFace(imageProxy)
-                            }.invoke()
-                        }
-
-                        Log.d(TAG, "Suspend 2: register value")
-
-                        if (croppedBitmap != null) {
-                            viewModel.setFaceBitmap(croppedBitmap)
-                        } else {
-                            Log.d(TAG, "CroppedBitmap is null!")
-                        }
-
-                        Log.d(TAG, "Navigate is called!")
-                        findNavController().navigate(R.id.action_faceRegistrationFragment_to_addFaceFragment)
+                        Log.d(TAG, "Suspend 1: crop image")
+                        croppedBitmap = faceRecognitionProcessor.cropBiggestFace(imageProxy)
                     }
+                        .invokeOnCompletion {
+                            Log.d(TAG, "Suspend 2: register value")
+
+                            if (croppedBitmap != null) {
+                                viewModel.setFaceBitmap(croppedBitmap)
+                            } else {
+                                Log.d(TAG, "CroppedBitmap is null!")
+                            }
+
+                            Log.d(TAG, "Navigate is called!")
+                            findNavController().navigate(R.id.action_faceRegistrationFragment_to_addFaceFragment)
+                        }
                 }
-
-
 
                 override fun onError(exception: ImageCaptureException) {
                     super.onError(exception)

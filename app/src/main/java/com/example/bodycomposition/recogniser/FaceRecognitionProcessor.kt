@@ -100,6 +100,7 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
                     imageProxy.close()
                 }
             }
+
         return croppedBitmap
     }
 
