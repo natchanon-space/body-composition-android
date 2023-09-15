@@ -4,7 +4,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.graphics.RectF
+import android.os.Build
+import android.os.Environment
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.PreviewView
 import com.example.bodycomposition.component.BBoxOverlay
@@ -12,6 +15,10 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
+import java.io.File
+import java.io.FileOutputStream
+import java.time.LocalDate
+
 
 class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: PreviewView? = null) {
 
@@ -49,8 +56,7 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
             .addOnSuccessListener { faces ->
                 val faceBounds: MutableList<RectF> = arrayListOf()
                 for (face in faces) {
-                    faceBounds.add(face.boundingBox.transform(width, height, previewView!!)
-                    )
+                    faceBounds.add(face.boundingBox.transform(width, height, previewView!!))
                 }
                 overlay!!.drawBox(faceBounds)
                     imageProxy.close()
@@ -64,6 +70,7 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
     /**
      * Return cropped biggest face for face recognition process
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     @androidx.camera.core.ExperimentalGetImage
     fun cropBiggestFace(imageProxy: ImageProxy): Bitmap? {
 
@@ -90,10 +97,10 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
 
                     if (croppedBitmap != null) {
                         Log.d(TAG, "(cropBiggestFace) Cropped w:${croppedBitmap!!.width} h:${croppedBitmap!!.height}")
+                        saveImage(croppedBitmap!!)
                     } else {
                         Log.d(TAG, "(cropBiggestFace) Cropped: null")
                     }
-
                     imageProxy.close()
                 } else {
                     Log.d(TAG, "(cropBiggestFace) No face detected!")
@@ -105,6 +112,7 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
     }
 
     private fun Rect.transform(width: Int, height: Int, previewView: PreviewView): RectF {
+        // TODO: handle screen rotation
         val scaleX = previewView.width / width.toFloat()
         val scaleY = previewView.height / height.toFloat()
 
@@ -137,6 +145,24 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
         return Bitmap.createBitmap(image, boundingBox.left, boundingBox.top, width, height)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun saveImage(finalBitmap: Bitmap) {
+        val root = Environment.getExternalStorageDirectory().absolutePath
+        val myDir = File("$root/saved_images")
+        myDir.mkdirs()
+        val o = LocalDate.now()
+        val fname = "Image-$o.jpg"
+        val file = File(myDir, fname)
+        if (file.exists()) file.delete()
+        try {
+            val out = FileOutputStream(file)
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+            out.flush()
+            out.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
     private fun ImageProxy.toBitmap(): Bitmap {
         val buffer = planes[0].buffer
         buffer.rewind()
