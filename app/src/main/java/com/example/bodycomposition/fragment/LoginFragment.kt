@@ -1,35 +1,36 @@
 package com.example.bodycomposition.fragment
 
-import android.content.ContentValues
-import android.os.Build
+import android.graphics.Bitmap
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ExperimentalGetImage
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.bodycomposition.databinding.FragmentLoginBinding
+import com.example.bodycomposition.recogniser.FaceRecognitionProcessor
 import com.example.bodycomposition.utils.RequirePermissions
-import java.text.SimpleDateFormat
-import java.util.Locale
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
-class LoginFragment : Fragment() {
+@ExperimentalGetImage
+class LoginFragment : Fragment(), ImageAnalysis.Analyzer, FaceRecognitionProcessor.FaceRecognitionCallback {
 
     private lateinit var binding: FragmentLoginBinding
 
     private var imageCapture: ImageCapture? = null
 
     private lateinit var cameraExecutor: ExecutorService
+
+    private lateinit var faceRecognitionProcessor: FaceRecognitionProcessor
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +44,8 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
+
+        faceRecognitionProcessor = FaceRecognitionProcessor(binding.overlay, binding.viewFinder, this)
 
         binding.apply {
             loginFragment = this@LoginFragment
@@ -58,50 +61,12 @@ class LoginFragment : Fragment() {
         } else {
             RequirePermissions.requestPermissions(this)
         }
-
-        cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
     fun takePhoto() {
-        // Get a stable reference of the modifiable image capture use case
-        val imageCapture = imageCapture ?: return
-
-        // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-            .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-            }
-        }
-
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(requireContext().contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
-            .build()
-
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(requireContext()),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
-                }
-
-                override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
-                }
-            }
-        )
+        // TODO: Implement login method
+        Toast.makeText(requireContext(), "Login button pressed!", Toast.LENGTH_SHORT)
+        Log.d(TAG, "Login button pressed!")
     }
 
     private fun startCamera() {
@@ -121,6 +86,11 @@ class LoginFragment : Fragment() {
             imageCapture = ImageCapture.Builder()
                 .build()
 
+            val imageAnalysis = ImageAnalysis.Builder()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build()
+            imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(requireContext()), this)
+
             // Select front camera as a default
             val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
 
@@ -130,7 +100,7 @@ class LoginFragment : Fragment() {
 
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture)
+                    this, cameraSelector, preview, imageCapture, imageAnalysis)
 
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
@@ -144,8 +114,16 @@ class LoginFragment : Fragment() {
         cameraExecutor.shutdown()
     }
 
+    override fun analyze(imageProxy: ImageProxy) {
+        faceRecognitionProcessor.liveDetect(imageProxy)
+    }
+
     companion object {
         private const val TAG = "LoginFragment"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+    }
+
+    override fun onFaceDetected(faceBitmap: Bitmap?) {
+        TODO("Not yet implemented")
     }
 }
