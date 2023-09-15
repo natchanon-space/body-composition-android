@@ -1,7 +1,7 @@
 package com.example.bodycomposition.recogniser
 
 import android.graphics.Bitmap
-import android.graphics.Matrix
+import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.graphics.RectF
 import android.util.Log
@@ -64,9 +64,43 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
     /**
      * Return cropped biggest face for face recognition process
      */
-    fun cropBiggestFace(imageProxy: ImageProxy): Bitmap {
+    @androidx.camera.core.ExperimentalGetImage
+    fun cropBiggestFace(imageProxy: ImageProxy): Bitmap? {
 
-        return TODO("Provide the return value")
+        Log.d(TAG, "==START CROP BIGGEST FACE==")
+
+        val rotationDegrees = imageProxy.imageInfo.rotationDegrees
+
+        val bitmap = imageProxy.toBitmap()
+        val inputImage = InputImage.fromBitmap(bitmap, 0)
+
+        Log.d(TAG, "(cropBiggestFace) Original w:${bitmap.width} h:${bitmap.height}")
+
+        var croppedBitmap: Bitmap? = null
+
+        detector.process(inputImage)
+            .addOnSuccessListener {faces ->
+                Log.d(TAG, "(cropBiggestFace) Begin processing")
+                if (faces.size > 0) {
+                    // TODO: change to return biggest face
+
+                    Log.d(TAG, "FACE[0]: ${faces[0].boundingBox}")
+                    val face = faces[0]
+                    croppedBitmap = cropToBBox(bitmap, face.boundingBox)
+
+                    if (croppedBitmap != null) {
+                        Log.d(TAG, "(cropBiggestFace) Cropped w:${croppedBitmap!!.width} h:${croppedBitmap!!.height}")
+                    } else {
+                        Log.d(TAG, "(cropBiggestFace) Cropped: null")
+                    }
+
+                    imageProxy.close()
+                } else {
+                    Log.d(TAG, "(cropBiggestFace) No face detected!")
+                    imageProxy.close()
+                }
+            }
+        return croppedBitmap
     }
 
     private fun Rect.transform(width: Int, height: Int, previewView: PreviewView): RectF {
@@ -86,27 +120,31 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
         return RectF(scaledLeft, scaleTop, scaledRight, scaledBottom)
     }
 
-    private fun cropToBBox(image: Bitmap, bbox: Rect, rotation: Int): Bitmap? {
-        var shift: Int = 0
-        var image: Bitmap = image
-        if (rotation != 0) {
-            var matrix: Matrix = Matrix()
-            matrix.postRotate(rotation.toFloat())
-            image = Bitmap.createBitmap(image, 0, 0, image.width, image.height, matrix, true)
+    private fun cropToBBox(image: Bitmap, boundingBox: Rect): Bitmap? {
+
+        // TODO: validate correctness
+
+        var width = boundingBox.width()
+        var height = boundingBox.height()
+        if ((boundingBox.left + width) > image.width) {
+            width = image.width - boundingBox.left
         }
-        if (bbox.top >= 0
-            && bbox.bottom <= image.width
-            && bbox.top + bbox.height()  <= image.height
-            && bbox.left >= 0
-            && bbox.left + bbox.width() <= image.width) {
-            return Bitmap.createBitmap(image, bbox.left, bbox.top + shift, bbox.width(), bbox.height())
-        } else {
-            return null
+        if ((boundingBox.top + height) > image.height) {
+            height = image.height - boundingBox.top
         }
+
+        return Bitmap.createBitmap(image, boundingBox.left, boundingBox.top, width, height)
+    }
+
+    private fun ImageProxy.toBitmap(): Bitmap {
+        val buffer = planes[0].buffer
+        buffer.rewind()
+        val bytes = ByteArray(buffer.capacity())
+        buffer.get(bytes)
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
     }
 
     companion object {
         const val TAG = "FaceRecognitionProcessor"
     }
 }
-

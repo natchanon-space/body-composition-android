@@ -24,7 +24,11 @@
         android:id="@+id/loginFragment"
         android:name="com.example.bodycomposition.fragment.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_visualizeFragment"
+            app:destination="@id/visualizeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/guestInputFragment"
         android:name="com.example.bodycomposition.fragment.GuestInputFragment"
@@ -45,7 +49,16 @@
         android:label="fragment_face_registration"
         tools:layout="@layout/fragment_face_registration" >
         <action
-            android:id="@+id/action_faceRegistrationFragment_to_loginFragment"
+            android:id="@+id/action_faceRegistrationFragment_to_addFaceFragment"
+            app:destination="@id/addFaceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addFaceFragment"
+        android:name="com.example.bodycomposition.fragment.AddFaceFragment"
+        android:label="fragment_add_face"
+        tools:layout="@layout/fragment_add_face" >
+        <action
+            android:id="@+id/action_addFaceFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
 </navigation>

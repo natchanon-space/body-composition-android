@@ -73,4 +73,7 @@ dependencies {
 
     // ML Kit
     implementation("com.google.mlkit:face-detection:16.1.5")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 }
