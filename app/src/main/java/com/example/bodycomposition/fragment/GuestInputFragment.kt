@@ -1,37 +1,26 @@
 package com.example.bodycomposition.fragment
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.bodycomposition.R
+import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.databinding.FragmentGuestInputBinding
 import com.example.bodycomposition.model.DataViewModel
 
-class GuestInputFragment : Fragment() {
-
-    private lateinit var binding: FragmentGuestInputBinding
+class GuestInputFragment : BaseFragment<FragmentGuestInputBinding>() {
 
     private val viewModel: DataViewModel by activityViewModels()
 
-    override fun onCreateView(
+    override fun inflateViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val fragmentBinding = FragmentGuestInputBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
-        return fragmentBinding.root
+        container: ViewGroup?
+    ): FragmentGuestInputBinding {
+        return FragmentGuestInputBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // Observe LiveData updates
-        binding.lifecycleOwner = viewLifecycleOwner
-
+    override fun bindData() {
         binding.apply {
             guestInputFragment = this@GuestInputFragment
         }

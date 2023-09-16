@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
@@ -15,16 +14,14 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
+import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.databinding.FragmentLoginBinding
 import com.example.bodycomposition.recogniser.FaceRecognitionProcessor
 import com.example.bodycomposition.utils.RequirePermissions
 import java.util.concurrent.ExecutorService
 
 @ExperimentalGetImage
-class LoginFragment : Fragment(), ImageAnalysis.Analyzer, FaceRecognitionProcessor.FaceRecognitionCallback {
-
-    private lateinit var binding: FragmentLoginBinding
+class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyzer, FaceRecognitionProcessor.FaceRecognitionCallback {
 
     private var imageCapture: ImageCapture? = null
 
@@ -32,24 +29,19 @@ class LoginFragment : Fragment(), ImageAnalysis.Analyzer, FaceRecognitionProcess
 
     private lateinit var faceRecognitionProcessor: FaceRecognitionProcessor
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val fragmentBinding = FragmentLoginBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
-        return fragmentBinding.root
+    override fun inflateViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentLoginBinding {
+        return FragmentLoginBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
-
-        faceRecognitionProcessor = FaceRecognitionProcessor(binding.overlay, binding.viewFinder, this)
-
+    override fun bindData() {
         binding.apply {
             loginFragment = this@LoginFragment
         }
+
+        faceRecognitionProcessor = FaceRecognitionProcessor(binding.overlay, binding.viewFinder, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,12 +110,12 @@ class LoginFragment : Fragment(), ImageAnalysis.Analyzer, FaceRecognitionProcess
         faceRecognitionProcessor.liveDetect(imageProxy)
     }
 
+    override fun onFaceDetected(faceBitmap: Bitmap?) {
+        TODO("Not yet implemented")
+    }
+
     companion object {
         private const val TAG = "LoginFragment"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-    }
-
-    override fun onFaceDetected(faceBitmap: Bitmap?) {
-        TODO("Not yet implemented")
     }
 }

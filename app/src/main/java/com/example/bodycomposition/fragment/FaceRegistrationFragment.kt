@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
@@ -17,10 +16,10 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.bodycomposition.R
+import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.databinding.FragmentFaceRegistrationBinding
 import com.example.bodycomposition.model.FaceRegistrationViewModel
 import com.example.bodycomposition.recogniser.FaceRecognitionProcessor
@@ -29,9 +28,7 @@ import com.example.bodycomposition.utils.RequirePermissions
 import java.util.concurrent.ExecutorService
 
 
-@ExperimentalGetImage class FaceRegistrationFragment : Fragment(), ImageAnalysis.Analyzer, FaceRecognitionCallback {
-
-    private lateinit var binding: FragmentFaceRegistrationBinding
+@ExperimentalGetImage class FaceRegistrationFragment : BaseFragment<FragmentFaceRegistrationBinding>(), ImageAnalysis.Analyzer, FaceRecognitionCallback {
 
     private val viewModel: FaceRegistrationViewModel by activityViewModels()
 
@@ -41,26 +38,20 @@ import java.util.concurrent.ExecutorService
 
     private lateinit var faceRecognitionProcessor: FaceRecognitionProcessor
 
-    override fun onCreateView(
+    override fun inflateViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val fragmentBinding = FragmentFaceRegistrationBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
-        return fragmentBinding.root
+        container: ViewGroup?
+    ): FragmentFaceRegistrationBinding {
+        return FragmentFaceRegistrationBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
-
-        faceRecognitionProcessor = FaceRecognitionProcessor(binding.overlay, binding.viewFinder, this)
-
+    override fun bindData() {
         binding.apply {
             faceRegistrationFragment = this@FaceRegistrationFragment
             viewModel = this.viewModel
         }
+
+        faceRecognitionProcessor = FaceRecognitionProcessor(binding.overlay, binding.viewFinder, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,10 +128,6 @@ import java.util.concurrent.ExecutorService
         faceRecognitionProcessor.liveDetect(imageProxy)
     }
 
-    companion object {
-        private const val TAG = "FaceRegistrationFragment"
-    }
-
     override fun onFaceDetected(faceBitmap: Bitmap?) {
 
         Log.d(TAG, "Suspend 2: register value")
@@ -153,5 +140,9 @@ import java.util.concurrent.ExecutorService
 
         Log.d(TAG, "Navigate is called!")
         findNavController().navigate(R.id.action_faceRegistrationFragment_to_addFaceFragment)
+    }
+
+    companion object {
+        private const val TAG = "FaceRegistrationFragment"
     }
 }

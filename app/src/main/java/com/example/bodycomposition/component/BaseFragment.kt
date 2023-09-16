@@ -26,7 +26,6 @@ abstract class BaseFragment<VB: ViewDataBinding>: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-
         bindData()
     }
 
@@ -39,6 +38,7 @@ abstract class BaseFragment<VB: ViewDataBinding>: Fragment() {
     /**
      * Set up data binding:
      * `binding.apply {...}`
+     * This is called in `onViewCreated(...)`
      */
     abstract fun bindData()
 }

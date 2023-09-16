@@ -1,34 +1,25 @@
 package com.example.bodycomposition.fragment
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.databinding.FragmentVisualizeBinding
 import com.example.bodycomposition.model.DataViewModel
 
-class VisualizeFragment : Fragment() {
-
-    private lateinit var binding: FragmentVisualizeBinding
+class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>() {
 
     private val viewModel: DataViewModel by activityViewModels()
 
-    override fun onCreateView(
+    override fun inflateViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val fragmentBinding = FragmentVisualizeBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
-        return fragmentBinding.root
+        container: ViewGroup?
+    ): FragmentVisualizeBinding {
+        return FragmentVisualizeBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // Observe LiveData updates
-        binding.lifecycleOwner = viewLifecycleOwner
+    override fun bindData() {
+
     }
 
     companion object {
