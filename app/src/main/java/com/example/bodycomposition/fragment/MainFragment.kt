@@ -3,38 +3,28 @@ package com.example.bodycomposition.fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.bodycomposition.R
+import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.databinding.FragmentMainBinding
 import com.example.bodycomposition.model.DataViewModel
 import com.example.bodycomposition.utils.RequirePermissions
 import com.example.bodycomposition.utils.UserType
 
-class MainFragment : Fragment() {
-
-    private lateinit var binding: FragmentMainBinding
+class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     private val viewModel: DataViewModel by activityViewModels()
 
-    override fun onCreateView(
+    override fun inflateViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val fragmentBinding = FragmentMainBinding.inflate(inflater, container, false)
-        binding = fragmentBinding
-        return fragmentBinding.root
+        container: ViewGroup?
+    ): FragmentMainBinding {
+        return FragmentMainBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // Observe LiveData updates
-        binding.lifecycleOwner = viewLifecycleOwner
-
+    override fun bindData() {
         binding.apply {
             mainFragment = this@MainFragment
         }
@@ -67,4 +57,5 @@ class MainFragment : Fragment() {
     companion object {
         private const val TAG = "MainFragment"
     }
+
 }
