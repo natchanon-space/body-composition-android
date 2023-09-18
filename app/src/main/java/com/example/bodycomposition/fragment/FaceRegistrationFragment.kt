@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
@@ -134,12 +135,13 @@ import java.util.concurrent.ExecutorService
 
         if (faceBitmap != null) {
             viewModel.setFaceBitmap(faceBitmap)
+
+            Log.d(TAG, "Navigate is called!")
+            findNavController().navigate(R.id.action_faceRegistrationFragment_to_addFaceFragment)
         } else {
+            Toast.makeText(requireContext(), "No face detected!!!", Toast.LENGTH_SHORT).show()
             Log.d(TAG, "CroppedBitmap is null!")
         }
-
-        Log.d(TAG, "Navigate is called!")
-        findNavController().navigate(R.id.action_faceRegistrationFragment_to_addFaceFragment)
     }
 
     companion object {

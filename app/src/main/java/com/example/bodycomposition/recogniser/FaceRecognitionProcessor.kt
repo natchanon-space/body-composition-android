@@ -103,7 +103,6 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
 
                     if (croppedBitmap != null) {
                         Log.d(TAG, "(cropBiggestFace) Cropped w:${croppedBitmap!!.width} h:${croppedBitmap!!.height}")
-                        saveImage(croppedBitmap!!)
                     } else {
                         Log.d(TAG, "(cropBiggestFace) Cropped: null")
                     }
@@ -172,6 +171,7 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
             e.printStackTrace()
         }
     }
+
     private fun ImageProxy.toBitmap(): Bitmap {
         val buffer = planes[0].buffer
         buffer.rewind()
