@@ -57,5 +57,4 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     companion object {
         private const val TAG = "MainFragment"
     }
-
 }

@@ -12,11 +12,11 @@ import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.PreviewView
 import com.example.bodycomposition.component.BBoxOverlay
+import com.example.bodycomposition.model.FaceRegistrationViewModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
-
 
 class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, previewView: PreviewView? = null, callback: FaceRecognitionCallback) {
 
@@ -30,6 +30,7 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
     private val callback: FaceRecognitionCallback
     private val faceNetInterpreter = FaceNetInterpreter(context)
 
+    // TODO: Refactor all face recognition related code to this! (except for facenet interpreter)
     init {
         this.overlay = overlay
         this.previewView = previewView
@@ -70,13 +71,6 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
                 Log.e(TAG, it.toString(), it)
                 imageProxy.close()
             }
-    }
-
-    /**
-     * Find the closest face base on FaceNet result
-     */
-    fun recognizeFace(imageProxy: ImageProxy) {
-        // TODO: implement this
     }
 
     /**
@@ -133,7 +127,16 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
     /**
      * Add face vector to database
      */
-    fun registerFace() {}
+    fun registerFace(viewModel: FaceRegistrationViewModel) {
+        // TODO: Implement this
+    }
+
+    /**
+     * Find the closest face base on FaceNet result
+     */
+    fun recognizeFace(imageProxy: ImageProxy) {
+        // TODO: implement this
+    }
 
     private fun Rect.transform(width: Int, height: Int, previewView: PreviewView): RectF {
         // TODO: handle screen rotation
@@ -154,9 +157,6 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
     }
 
     private fun cropToBBox(image: Bitmap, boundingBox: Rect): Bitmap? {
-
-        // TODO: validate correctness
-
         var width = boundingBox.width()
         var height = boundingBox.height()
         if ((boundingBox.left + width) > image.width) {
@@ -165,7 +165,6 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
         if ((boundingBox.top + height) > image.height) {
             height = image.height - boundingBox.top
         }
-
         return Bitmap.createBitmap(image, boundingBox.left, boundingBox.top, width, height)
     }
 
