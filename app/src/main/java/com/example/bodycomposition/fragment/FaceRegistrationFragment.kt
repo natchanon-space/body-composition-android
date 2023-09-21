@@ -52,7 +52,7 @@ import java.util.concurrent.ExecutorService
             viewModel = this.viewModel
         }
 
-        faceRecognitionProcessor = FaceRecognitionProcessor(binding.overlay, binding.viewFinder, this)
+        faceRecognitionProcessor = FaceRecognitionProcessor(requireContext(), binding.overlay, binding.viewFinder, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

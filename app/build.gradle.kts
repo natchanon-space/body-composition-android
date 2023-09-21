@@ -74,6 +74,13 @@ dependencies {
     // ML Kit
     implementation("com.google.mlkit:face-detection:16.1.5")
 
+    // tflite
+    val tfliteVersion = "2.13.0"
+    implementation("org.tensorflow:tensorflow-lite:${tfliteVersion}")
+    implementation("org.tensorflow:tensorflow-lite-gpu:${tfliteVersion}")
+    implementation("org.tensorflow:tensorflow-lite-gpu-api:${tfliteVersion}")
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
+
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 }

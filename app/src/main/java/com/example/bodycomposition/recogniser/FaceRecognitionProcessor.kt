@@ -1,5 +1,6 @@
 package com.example.bodycomposition.recogniser
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -17,7 +18,7 @@ import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
 
 
-class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: PreviewView? = null, callback: FaceRecognitionCallback) {
+class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, previewView: PreviewView? = null, callback: FaceRecognitionCallback) {
 
     interface FaceRecognitionCallback {
         fun onFaceDetected(faceBitmap: Bitmap?)
@@ -27,6 +28,7 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
     private val overlay: BBoxOverlay?
     private val previewView: PreviewView?
     private val callback: FaceRecognitionCallback
+    private val faceNetInterpreter = FaceNetInterpreter(context)
 
     init {
         this.overlay = overlay
@@ -127,6 +129,11 @@ class FaceRecognitionProcessor(overlay: BBoxOverlay? = null, previewView: Previe
 
         return croppedBitmap
     }
+
+    /**
+     * Add face vector to database
+     */
+    fun registerFace() {}
 
     private fun Rect.transform(width: Int, height: Int, previewView: PreviewView): RectF {
         // TODO: handle screen rotation

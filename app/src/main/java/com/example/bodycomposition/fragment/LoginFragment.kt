@@ -41,7 +41,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
             loginFragment = this@LoginFragment
         }
 
-        faceRecognitionProcessor = FaceRecognitionProcessor(binding.overlay, binding.viewFinder, this)
+        faceRecognitionProcessor = FaceRecognitionProcessor(requireContext(), binding.overlay, binding.viewFinder, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
