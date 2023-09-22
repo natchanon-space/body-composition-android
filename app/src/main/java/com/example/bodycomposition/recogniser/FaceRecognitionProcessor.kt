@@ -107,6 +107,9 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
                     if (croppedBitmap != null) {
                         Log.d(TAG, "(cropBiggestFace) Cropped w:${croppedBitmap!!.width} h:${croppedBitmap!!.height}")
                         croppedBitmap = flipBitmap(rotateBitmap(croppedBitmap!!, rotationDegrees))
+
+                        // TODO: Move this to more appropriate part after FaceNetInterpreter completely run
+                        Log.d(TAG, "Complete?? ${faceNetInterpreter.getFaceVector(croppedBitmap!!)}")
                     } else {
                         Log.d(TAG, "(cropBiggestFace) Cropped: null")
                     }
