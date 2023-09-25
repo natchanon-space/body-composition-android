@@ -22,7 +22,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.bodycomposition.R
 import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.databinding.FragmentFaceRegistrationBinding
-import com.example.bodycomposition.model.FaceRegistrationViewModel
+import com.example.bodycomposition.model.DataViewModel
 import com.example.bodycomposition.recogniser.FaceRecognitionProcessor
 import com.example.bodycomposition.recogniser.FaceRecognitionProcessor.FaceRecognitionCallback
 import com.example.bodycomposition.utils.RequirePermissions
@@ -31,7 +31,7 @@ import java.util.concurrent.ExecutorService
 
 @ExperimentalGetImage class FaceRegistrationFragment : BaseFragment<FragmentFaceRegistrationBinding>(), ImageAnalysis.Analyzer, FaceRecognitionCallback {
 
-    private val viewModel: FaceRegistrationViewModel by activityViewModels()
+    private val viewModel: DataViewModel by activityViewModels()
 
     private var imageCapture: ImageCapture? = null
 

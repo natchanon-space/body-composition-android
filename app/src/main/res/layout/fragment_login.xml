@@ -9,6 +9,9 @@
         <variable
             name="loginFragment"
             type="com.example.bodycomposition.fragment.LoginFragment" />
+        <variable
+            name="viewModel"
+            type="com.example.bodycomposition.model.DataViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

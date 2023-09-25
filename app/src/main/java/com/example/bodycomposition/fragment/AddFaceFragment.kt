@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.databinding.FragmentAddFaceBinding
-import com.example.bodycomposition.model.FaceRegistrationViewModel
+import com.example.bodycomposition.model.DataViewModel
 
 class AddFaceFragment : BaseFragment<FragmentAddFaceBinding>() {
 
-    private val viewModel: FaceRegistrationViewModel by activityViewModels()
+    private val viewModel: DataViewModel by activityViewModels()
 
     override fun inflateViewBinding(
         inflater: LayoutInflater,

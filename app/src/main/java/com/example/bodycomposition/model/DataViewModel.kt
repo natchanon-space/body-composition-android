@@ -1,33 +1,42 @@
 package com.example.bodycomposition.model
 
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.bodycomposition.utils.UserInfo
 import com.example.bodycomposition.utils.UserType
 
-class DataViewModel : ViewModel() {
+class DataViewModel: ViewModel() {
 
     // TODO: Change all these data type to be more appropriate
 
-    // User date of birth
-    private val _dateOfBirth = MutableLiveData<String>()
-    val dateOfBirth: LiveData<String> = _dateOfBirth
+    private val _faceBitmap = MutableLiveData<Bitmap>()
+    val faceBitmap: LiveData<Bitmap> = _faceBitmap
 
-    // User height in cm unit
-    private val _height = MutableLiveData<String>()
-    val height: LiveData<String> = _height
+    private val _faceVector = MutableLiveData<FloatArray>()
+    val faceVector: LiveData<FloatArray> = _faceVector
 
-    // Auth method
+    private val _userInfo = MutableLiveData<UserInfo>()
+    val userInfo: LiveData<UserInfo> = _userInfo
+
     private val _userType = MutableLiveData<UserType>()
     val userType: LiveData<UserType> = _userType
 
-    // Set data from user input
-    fun setData(dateOfBirth: String, height: String) {
-        _dateOfBirth.value = dateOfBirth
-        _height.value = height
+    fun setFaceBitmap(bitmap: Bitmap) {
+        _faceBitmap.value = bitmap
+    }
+
+    fun setFaceVector(vector: FloatArray) {
+        _faceVector.value = vector
+    }
+
+    fun setUserInfo(userInfo: UserInfo) {
+        _userInfo.value = userInfo
     }
 
     fun setUserType(userType: UserType) {
         _userType.value = userType
     }
+
 }

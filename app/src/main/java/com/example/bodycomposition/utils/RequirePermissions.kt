@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 
 object RequirePermissions {
     // All necessary permissions
-    val REQUIRED_PERMISSIONS =
+    private val REQUIRED_PERMISSIONS =
         mutableListOf (
             Manifest.permission.CAMERA,
         ).apply {

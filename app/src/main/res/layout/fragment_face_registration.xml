@@ -10,7 +10,7 @@ tools:context=".fragment.FaceRegistrationFragment">
             type="com.example.bodycomposition.fragment.FaceRegistrationFragment" />
         <variable
             name="viewModel"
-            type="com.example.bodycomposition.model.FaceRegistrationViewModel" />
+            type="com.example.bodycomposition.model.DataViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

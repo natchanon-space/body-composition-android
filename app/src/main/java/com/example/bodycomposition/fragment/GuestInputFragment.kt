@@ -27,10 +27,6 @@ class GuestInputFragment : BaseFragment<FragmentGuestInputBinding>() {
     }
 
     fun onSubmit() {
-        viewModel.setData(
-            dateOfBirth = binding.date.text.toString(),
-            height = binding.height.text.toString()
-        )
         findNavController().navigate(R.id.action_guestInputFragment_to_visualizeFragment)
     }
 

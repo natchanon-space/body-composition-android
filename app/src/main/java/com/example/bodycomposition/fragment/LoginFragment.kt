@@ -14,14 +14,18 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.databinding.FragmentLoginBinding
+import com.example.bodycomposition.model.DataViewModel
 import com.example.bodycomposition.recogniser.FaceRecognitionProcessor
 import com.example.bodycomposition.utils.RequirePermissions
 import java.util.concurrent.ExecutorService
 
 @ExperimentalGetImage
 class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyzer, FaceRecognitionProcessor.FaceRecognitionCallback {
+
+    private val viewModel: DataViewModel by activityViewModels()
 
     private var imageCapture: ImageCapture? = null
 

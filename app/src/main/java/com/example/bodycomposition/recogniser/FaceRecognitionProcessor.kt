@@ -12,7 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.PreviewView
 import com.example.bodycomposition.component.BBoxOverlay
-import com.example.bodycomposition.model.FaceRegistrationViewModel
+import com.example.bodycomposition.model.DataViewModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
@@ -130,7 +130,7 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
     /**
      * Add face vector to database
      */
-    fun registerFace(viewModel: FaceRegistrationViewModel) {
+    fun registerFace(viewModel: DataViewModel) {
         // TODO: Implement this
     }
 
