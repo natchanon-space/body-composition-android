@@ -25,6 +25,7 @@ class AddFaceFragment : BaseFragment<FragmentAddFaceBinding>() {
         }
 
         binding.imageView.setImageBitmap(viewModel.faceBitmap.value)
+        binding.datePicker.setUpPicker(requireFragmentManager())
     }
 
     companion object {
