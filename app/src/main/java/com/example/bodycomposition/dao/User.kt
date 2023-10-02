@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class User(
-    @PrimaryKey val uid: Int,
+    @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo(name = "name") val name: String?,
-    @ColumnInfo(name = "height") val height: Int?
+    @ColumnInfo(name = "height") val height: Int?,
+    @ColumnInfo(name = "faceVector") val faceVector: FloatArray?
 )

@@ -12,7 +12,6 @@ import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.PreviewView
 import com.example.bodycomposition.component.BBoxOverlay
-import com.example.bodycomposition.model.DataViewModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
@@ -127,20 +126,6 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
         return croppedBitmap
     }
 
-    /**
-     * Add face vector to database
-     */
-    fun registerFace(viewModel: DataViewModel) {
-        // TODO: Implement this
-    }
-
-    /**
-     * Find the closest face base on FaceNet result
-     */
-    fun recognizeFace(imageProxy: ImageProxy) {
-        // TODO: implement this
-    }
-
     private fun Rect.transform(width: Int, height: Int, previewView: PreviewView): RectF {
         // TODO: handle screen rotation
         val scaleX = previewView.width / width.toFloat()
@@ -193,5 +178,6 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
 
     companion object {
         const val TAG = "FaceRecognitionProcessor"
+
     }
 }
