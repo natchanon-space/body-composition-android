@@ -1,15 +1,18 @@
 package com.example.bodycomposition.fragment
 
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -43,6 +46,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
     override fun bindData() {
         binding.apply {
             loginFragment = this@LoginFragment
+            viewModel = this.viewModel
         }
 
         faceRecognitionProcessor = FaceRecognitionProcessor(requireContext(), binding.overlay, binding.viewFinder, this)
@@ -61,8 +65,26 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
 
     fun takePhoto() {
         // TODO: Implement login method
-        Toast.makeText(requireContext(), "Login button pressed!", Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), "Login button pressed!", Toast.LENGTH_SHORT).show()
         Log.d(TAG, "Login button pressed!")
+
+        imageCapture?.takePicture(
+            ContextCompat.getMainExecutor(requireContext()),
+            object : ImageCapture.OnImageCapturedCallback() {
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun onCaptureSuccess(imageProxy: ImageProxy) {
+                    Log.d(TAG, "==TAKE PICTURE STARTING==")
+
+                    Log.d(TAG, "Suspend 1: crop image")
+                    faceRecognitionProcessor.cropBiggestFace(imageProxy)
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    super.onError(exception)
+                    Log.d(TAG, "Image capture error!", exception)
+                }
+            }
+        )
     }
 
     private fun startCamera() {
@@ -115,7 +137,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
     }
 
     override fun onFaceDetected(faceBitmap: Bitmap?, faceVector: FloatArray?) {
-        TODO("Not yet implemented")
+        // TODO: find closest face and return user then navigate to registration
+
+        Log.d(TAG, "onFaceDetected")
     }
 
     companion object {

@@ -16,6 +16,9 @@ import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+/**
+ * [ref](https://arxiv.org/pdf/1503.03832.pdf)
+ */
 class FaceNetInterpreter(context: Context) {
 
     // Run to get predict result from tflite model
@@ -53,6 +56,25 @@ class FaceNetInterpreter(context: Context) {
         private const val modelPath = "facenet.tflite"
         private const val inputDims = 160 // Square dimension of input image
         private const val outputSize = 512 // Desired vector size
+
+        // Util function
+        /**
+         * Squared Euclidean (L2) distance
+         */
+        fun calculateDistance(face1: FloatArray, face2: FloatArray): Double {
+            var distance = 0.0
+
+            if (face1.size != face2.size) {
+                throw ArithmeticException("Array size is not equals ${face1.size} and ${face2.size}")
+            }
+
+            val size = face1.size
+            for (i in 0 until size) {
+                distance += (face1[i] + face2[i]).toDouble().pow(2.0)
+            }
+
+            return distance
+        }
     }
 
     class StandardizeOp : TensorOperator {
