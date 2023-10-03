@@ -20,7 +20,7 @@ import com.google.mlkit.vision.face.FaceDetectorOptions
 class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, previewView: PreviewView? = null, callback: FaceRecognitionCallback) {
 
     interface FaceRecognitionCallback {
-        fun onFaceDetected(faceBitmap: Bitmap?)
+        fun onFaceDetected(faceBitmap: Bitmap?, faceVector: FloatArray?)
     }
 
     private var detector: FaceDetector
@@ -77,7 +77,7 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
      */
     @RequiresApi(Build.VERSION_CODES.O)
     @androidx.camera.core.ExperimentalGetImage
-    fun cropBiggestFace(imageProxy: ImageProxy): Bitmap? {
+    fun cropBiggestFace(imageProxy: ImageProxy): Pair<Bitmap?, FloatArray?> {
 
         Log.d(TAG, "==START CROP BIGGEST FACE==")
 
@@ -89,6 +89,7 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
         Log.d(TAG, "(cropBiggestFace) Original w:${bitmap.width} h:${bitmap.height}")
 
         var croppedBitmap: Bitmap? = null
+        var faceVector: FloatArray? = null
 
         detector.process(inputImage)
             .addOnSuccessListener {faces ->
@@ -107,8 +108,8 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
                         Log.d(TAG, "(cropBiggestFace) Cropped w:${croppedBitmap!!.width} h:${croppedBitmap!!.height}")
                         croppedBitmap = flipBitmap(rotateBitmap(croppedBitmap!!, rotationDegrees))
 
-                        // TODO: Move this to more appropriate part after FaceNetInterpreter completely run
-                        Log.d(TAG, "Complete?? ${faceNetInterpreter.getFaceVector(croppedBitmap!!)}")
+                        faceVector = faceNetInterpreter.getFaceVector(croppedBitmap!!)
+                        Log.d(TAG, "Complete?? $faceVector")
                     } else {
                         Log.d(TAG, "(cropBiggestFace) Cropped: null")
                     }
@@ -120,10 +121,10 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
                 }
             }
             .addOnCompleteListener {
-                callback.onFaceDetected(croppedBitmap)
+                callback.onFaceDetected(croppedBitmap, faceVector)
             }
 
-        return croppedBitmap
+        return croppedBitmap to faceVector
     }
 
     private fun Rect.transform(width: Int, height: Int, previewView: PreviewView): RectF {

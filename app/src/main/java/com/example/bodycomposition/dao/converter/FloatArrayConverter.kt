@@ -6,12 +6,14 @@ import androidx.room.TypeConverter
 @ProvidedTypeConverter
 class FloatArrayConverter {
     @TypeConverter
-    fun FloatArrayToString(floatArray: FloatArray?): String? {
-        return floatArray?.joinToString(separator = ";") { it.toString() } ?: ""
+    fun floatArrayToString(floatArray: FloatArray?): String? {
+        if (floatArray == null) return null
+        return floatArray.joinToString(separator = ";") { it.toString() }
     }
 
     @TypeConverter
-    fun StringToFloatArray(string: String?): FloatArray? {
-        return string?.split(";")?.map { it.toFloat() }?.toFloatArray() ?: FloatArray(0)
+    fun stringToFloatArray(string: String?): FloatArray? {
+        if (string == null) return null
+        return string.split(";").map { it.toFloat() }?.toFloatArray()
     }
 }

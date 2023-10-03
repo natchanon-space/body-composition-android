@@ -129,18 +129,19 @@ import java.util.concurrent.ExecutorService
         faceRecognitionProcessor.liveDetect(imageProxy)
     }
 
-    override fun onFaceDetected(faceBitmap: Bitmap?) {
+    override fun onFaceDetected(faceBitmap: Bitmap?, faceVector: FloatArray?) {
 
         Log.d(TAG, "Suspend 2: register value")
 
-        if (faceBitmap != null) {
+        if (faceBitmap != null && faceVector != null) {
             viewModel.setFaceBitmap(faceBitmap)
+            viewModel.setFaceVector(faceVector)
 
             Log.d(TAG, "Navigate is called!")
             findNavController().navigate(R.id.action_faceRegistrationFragment_to_addFaceFragment)
         } else {
             Toast.makeText(requireContext(), "No face detected!!!", Toast.LENGTH_SHORT).show()
-            Log.d(TAG, "CroppedBitmap is null!")
+            Log.d(TAG, "CroppedBitmap and/or FaceVector are null!")
         }
     }
 

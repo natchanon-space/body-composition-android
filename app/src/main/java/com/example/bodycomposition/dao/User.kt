@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class User(
+    // Insert methods treat 0 as not set while inserting item
     @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "height") val height: Int?,

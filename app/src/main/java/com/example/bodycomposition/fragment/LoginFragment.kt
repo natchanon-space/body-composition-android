@@ -114,7 +114,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
         faceRecognitionProcessor.liveDetect(imageProxy)
     }
 
-    override fun onFaceDetected(faceBitmap: Bitmap?) {
+    override fun onFaceDetected(faceBitmap: Bitmap?, faceVector: FloatArray?) {
         TODO("Not yet implemented")
     }
 
