@@ -1,5 +1,6 @@
 package com.example.bodycomposition.fragment
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
@@ -19,7 +20,11 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>() {
     }
 
     override fun bindData() {
+        binding.apply {
+            viewModel = this.viewModel
+        }
 
+        Log.d(TAG, "data in viewModel name: ${viewModel.userInfo.value?.name} height: ${viewModel.userInfo.value?.height}")
     }
 
     companion object {

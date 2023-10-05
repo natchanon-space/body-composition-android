@@ -3,6 +3,7 @@ package com.example.bodycomposition.fragment
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -18,17 +19,29 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.bodycomposition.R
 import com.example.bodycomposition.component.BaseFragment
+import com.example.bodycomposition.dao.AppDatabase
+import com.example.bodycomposition.dao.User
 import com.example.bodycomposition.databinding.FragmentLoginBinding
 import com.example.bodycomposition.model.DataViewModel
+import com.example.bodycomposition.recogniser.FaceNetInterpreter
 import com.example.bodycomposition.recogniser.FaceRecognitionProcessor
 import com.example.bodycomposition.utils.RequirePermissions
+import com.example.bodycomposition.utils.UserInfo
+import com.example.bodycomposition.utils.UserType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 
 @ExperimentalGetImage
 class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyzer, FaceRecognitionProcessor.FaceRecognitionCallback {
 
     private val viewModel: DataViewModel by activityViewModels()
+
+    private lateinit var db: AppDatabase
 
     private var imageCapture: ImageCapture? = null
 
@@ -50,6 +63,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
         }
 
         faceRecognitionProcessor = FaceRecognitionProcessor(requireContext(), binding.overlay, binding.viewFinder, this)
+
+        db = AppDatabase.getDatabase(requireContext())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,12 +153,77 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
 
     override fun onFaceDetected(faceBitmap: Bitmap?, faceVector: FloatArray?) {
         // TODO: find closest face and return user then navigate to registration
-
         Log.d(TAG, "onFaceDetected")
+
+        val dao = db.userDao()
+        var userList: List<User>? = null
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            suspend {
+                userList = dao.getAll()
+                Log.d(TAG, "1st: Retrieve user list")
+            }.invoke()
+
+            lifecycleScope.launch(Dispatchers.Main) {
+                suspend {
+                    // Run Toast on Thread requirement
+                    if (Looper.myLooper() == null) {
+                        Looper.prepare()
+                    }
+
+                    val threshold: Double = 100.0 // Temporary threshold
+                    var user: User? = null
+                    var distance: Double? = null
+
+                    Log.d(TAG, "2nd: Finding closest face")
+                    if (userList == null || userList!!.isEmpty()) {
+                        Log.d(TAG, "No face in database!")
+                        Toast.makeText(requireContext(), "No face in database!", Toast.LENGTH_SHORT).show()
+                    }
+
+                    // Find the closest face within threshold
+                    for (u in userList!!) {
+                        val currentDistance = FaceNetInterpreter.calculateDistance(faceVector!!, u.faceVector!!)
+                        var update = false
+
+                        Log.d(TAG, "Comparing to ${u.name}, distance: $currentDistance")
+
+                        if (currentDistance <= threshold) {
+                            if (user != null) {
+                                if (currentDistance < distance!!) {
+                                    update = true
+                                }
+                            } else {
+                                update = true
+                            }
+                        }
+
+                        if (update) {
+                            user = u
+                            distance = currentDistance
+                        }
+                    }
+
+                    if (user != null) {
+                        viewModel.setUserInfo(UserInfo("TEMP-DOB", user.height!!, user.name!!))
+                        viewModel.setUserType(UserType.AUTH)
+
+                        Log.d(TAG, "Distance: $distance Name: ${user.name}")
+
+                        Log.d(TAG, "Navigate is called!")
+                        findNavController().navigate(
+                            R.id.action_loginFragment_to_visualizeFragment
+                        )
+                    } else {
+                        Log.d(TAG, "No face recognized!")
+                        Toast.makeText(requireContext(), "No face recognized", Toast.LENGTH_SHORT).show()
+                    }
+                }.invoke()
+            }
+        }
     }
 
     companion object {
         private const val TAG = "LoginFragment"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
     }
 }

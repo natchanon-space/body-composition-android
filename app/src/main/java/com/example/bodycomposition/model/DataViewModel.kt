@@ -32,11 +32,13 @@ class DataViewModel: ViewModel() {
     }
 
     fun setUserInfo(userInfo: UserInfo) {
-        _userInfo.value = userInfo
+//        _userInfo.value = userInfo
+        _userInfo.postValue(userInfo)
     }
 
     fun setUserType(userType: UserType) {
-        _userType.value = userType
+//        _userType.value = userType
+        _userType.postValue(userType)
     }
 
 }

@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.bodycomposition.R
 import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.dao.AppDatabase
 import com.example.bodycomposition.dao.User
@@ -74,6 +76,9 @@ class AddFaceFragment : BaseFragment<FragmentAddFaceBinding>() {
             val size = userList.size
             Log.d(TAG, "name: ${userList[size-1].name} ${userList[size-1].faceVector}")
         }
+
+        Log.d(TAG, "navigate called!!")
+        findNavController().navigate(R.id.action_addFaceFragment_to_loginFragment)
     }
 
     companion object {
