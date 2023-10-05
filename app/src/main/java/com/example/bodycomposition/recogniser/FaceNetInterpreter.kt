@@ -70,7 +70,7 @@ class FaceNetInterpreter(context: Context) {
 
             val size = face1.size
             for (i in 0 until size) {
-                distance += (face1[i] + face2[i]).toDouble().pow(2.0)
+                distance += (face1[i] - face2[i]).toDouble().pow(2.0)
             }
 
             return distance

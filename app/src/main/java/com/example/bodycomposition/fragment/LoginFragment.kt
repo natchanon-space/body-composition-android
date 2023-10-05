@@ -171,7 +171,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
                         Looper.prepare()
                     }
 
-                    val threshold: Double = 100.0 // Temporary threshold
+                    val threshold: Double = 1.1 // Temporary threshold
                     var user: User? = null
                     var distance: Double? = null
 
