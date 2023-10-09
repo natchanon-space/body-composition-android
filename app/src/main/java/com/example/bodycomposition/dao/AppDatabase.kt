@@ -6,12 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.bodycomposition.dao.converter.FloatArrayConverter
+import com.example.bodycomposition.dao.converter.LocalDateConverter
 
 /**
  * @see [reference](https://developer.android.com/training/data-storage/room#database)
  */
 @Database(entities = [User::class], version = 1, exportSchema = false)
-@TypeConverters(FloatArrayConverter::class)
+@TypeConverters(FloatArrayConverter::class, LocalDateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 
@@ -30,6 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
                         "face-db"
                     )
                         .addTypeConverter(FloatArrayConverter())
+                        .addTypeConverter(LocalDateConverter())
                         .build()
                 }
             }

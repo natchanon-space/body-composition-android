@@ -45,6 +45,7 @@ class AddFaceFragment : BaseFragment<FragmentAddFaceBinding>() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun register() {
         val dao = db.userDao()
 
@@ -64,17 +65,15 @@ class AddFaceFragment : BaseFragment<FragmentAddFaceBinding>() {
 
         Log.d(TAG, "TEST FLOAT_ARRAY[0] ${viewModel.faceVector.value?.get(0)}")
 
-        // TODO: add date of birth
-
         // Accessing database with coroutine scope
         lifecycleScope.launch(Dispatchers.IO) {
-            dao.insertAll(User(0, name, Integer.parseInt(height), viewModel.faceVector.value))
+            dao.insertAll(User(0, name, Integer.parseInt(height), binding.datePicker.getLocalDate(), viewModel.faceVector.value))
             Log.d(TAG, dao.getAll().size.toString())
 
             // Check if data is added
             val userList = dao.getAll()
             val size = userList.size
-            Log.d(TAG, "name: ${userList[size-1].name} ${userList[size-1].faceVector}")
+            Log.d(TAG, "name: ${userList[size-1].name} ${userList[size-1].faceVector} ${userList[size-1].date}")
         }
 
         Log.d(TAG, "navigate called!!")

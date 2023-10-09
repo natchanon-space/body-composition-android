@@ -6,9 +6,12 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
+import com.example.bodycomposition.utils.Constant.DATE_FORMAT
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.TimeZone
 
@@ -30,7 +33,7 @@ class DatePickerLayout(context: Context, attrs: AttributeSet?) : TextInputLayout
 
             val calendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             calendar.timeInMillis = selection
-            val format = SimpleDateFormat("dd-MM-yyyy")
+            val format = SimpleDateFormat(DATE_FORMAT)
             val formattedDate: String = format.format(calendar.time)
 
             editText?.setText(formattedDate)
@@ -41,6 +44,15 @@ class DatePickerLayout(context: Context, attrs: AttributeSet?) : TextInputLayout
         editText?.setOnClickListener{
             picker.show(fragmentManager, TAG)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getLocalDate(): LocalDate? {
+        var localDate: LocalDate? = null
+        if (editText?.text != null) {
+            localDate = LocalDate.parse(editText?.text, DateTimeFormatter.ofPattern(DATE_FORMAT))
+        }
+        return localDate
     }
 
     companion object {

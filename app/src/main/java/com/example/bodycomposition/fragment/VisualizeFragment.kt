@@ -24,7 +24,7 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>() {
             viewModel = this.viewModel
         }
 
-        Log.d(TAG, "data in viewModel name: ${viewModel.userInfo.value?.name} height: ${viewModel.userInfo.value?.height}")
+        Log.d(TAG, "data in viewModel name: ${viewModel.userInfo.value?.name} height: ${viewModel.userInfo.value?.height} dob: ${viewModel.userInfo.value?.dateOfBirth}")
     }
 
     companion object {
