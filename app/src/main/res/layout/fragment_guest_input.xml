@@ -10,7 +10,7 @@
             name="guestInputFragment"
             type="com.example.bodycomposition.fragment.GuestInputFragment" />
         <variable
-            name="dataViewModel"
+            name="viewModel"
             type="com.example.bodycomposition.model.DataViewModel" />
     </data>
 
@@ -46,8 +46,8 @@
                     android:hint="Height" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_input_date"
+            <com.example.bodycomposition.component.DatePickerLayout
+                android:id="@+id/datePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -56,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Date of Birth" />
-            </com.google.android.material.textfield.TextInputLayout>
+            </com.example.bodycomposition.component.DatePickerLayout>
 
         </LinearLayout>
 
