@@ -14,8 +14,18 @@ object RequirePermissions {
         mutableListOf (
             Manifest.permission.CAMERA,
         ).apply {
+            // CameraX permissions
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                 add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+
+            // Scale permissions
+            if (Build.VERSION.SDK_INT >= 23) {
+                // android version 6-11
+                add(Manifest.permission.ACCESS_COARSE_LOCATION)
+                add(Manifest.permission.ACCESS_FINE_LOCATION)
+                // android version >= 12
+                add(Manifest.permission.BLUETOOTH_CONNECT)
             }
         }.toTypedArray()
 

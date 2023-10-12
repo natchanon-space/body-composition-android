@@ -49,7 +49,7 @@ class GuestInputFragment : BaseFragment<FragmentGuestInputBinding>() {
         viewModel.setUserType(UserType.GUEST)
         viewModel.setUserInfo(UserInfo(binding.datePicker.getLocalDate()!!, height.toInt(), "Guest"))
 
-        findNavController().navigate(R.id.action_guestInputFragment_to_scanDeviceFragment)
+        findNavController().navigate(R.id.action_guestInputFragment_to_visualizeFragment)
     }
 
     companion object {

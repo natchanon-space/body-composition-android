@@ -212,7 +212,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
 
                         Log.d(TAG, "Navigate is called!")
                         findNavController().navigate(
-                            R.id.action_loginFragment_to_scanDeviceFragment
+                            R.id.action_loginFragment_to_visualizeFragment
                         )
                     } else {
                         Log.d(TAG, "No face recognized!")

@@ -26,8 +26,8 @@
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
-            android:id="@+id/action_loginFragment_to_scanDeviceFragment"
-            app:destination="@id/scanDeviceFragment" />
+            android:id="@+id/action_loginFragment_to_visualizeFragment"
+            app:destination="@id/visualizeFragment" />
     </fragment>
     <fragment
         android:id="@+id/guestInputFragment"
@@ -35,14 +35,18 @@
         android:label="fragment_guest_input"
         tools:layout="@layout/fragment_guest_input" >
         <action
-            android:id="@+id/action_guestInputFragment_to_scanDeviceFragment"
-            app:destination="@id/scanDeviceFragment" />
+            android:id="@+id/action_guestInputFragment_to_visualizeFragment"
+            app:destination="@id/visualizeFragment" />
     </fragment>
     <fragment
         android:id="@+id/visualizeFragment"
         android:name="com.example.bodycomposition.fragment.VisualizeFragment"
         android:label="fragment_visualize"
-        tools:layout="@layout/fragment_visualize" />
+        tools:layout="@layout/fragment_visualize" >
+        <action
+            android:id="@+id/action_visualizeFragment_to_scanDeviceFragment"
+            app:destination="@id/scanDeviceFragment" />
+    </fragment>
     <fragment
         android:id="@+id/faceRegistrationFragment"
         android:name="com.example.bodycomposition.fragment.FaceRegistrationFragment"
