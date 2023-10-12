@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import cn.icomon.icdevicemanager.model.device.ICDevice
 import cn.icomon.icdevicemanager.model.device.ICScanDeviceInfo
+import cn.icomon.icdevicemanager.model.other.ICConstant.ICSexType
 import com.example.bodycomposition.R
 import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.databinding.FragmentVisualizeBinding
@@ -42,6 +43,11 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>() {
         binding.name.text = currentUserInfo.name
         binding.height.text = currentUserInfo.height.toString()
         binding.date.text = currentUserInfo.dateOfBirth.format(DateTimeFormatter.ofPattern(DATE_FORMAT))
+        when (currentUserInfo.sex) {
+            ICSexType.ICSexTypeUnknown -> binding.sex.text = "Unspecified"
+            ICSexType.ICSexTypeMale -> binding.sex.text = "Male"
+            ICSexType.ICSexTypeFemal -> binding.sex.text = "Female"
+        }
 
         binding.deleteButton.isEnabled = false
         binding.addButton.isEnabled = true

@@ -9,7 +9,7 @@ import cn.icomon.icdevicemanager.model.other.ICConstant
 class SexSpinner(context: Context, attrs: AttributeSet?) : AppCompatSpinner(context, attrs) {
 
     private val items = arrayOf("Unspecified", "Male", "Female")
-    val itemValues = arrayOf(
+    private val itemValues = arrayOf(
         ICConstant.ICSexType.ICSexTypeUnknown,
         ICConstant.ICSexType.ICSexTypeMale,
         ICConstant.ICSexType.ICSexTypeFemal)

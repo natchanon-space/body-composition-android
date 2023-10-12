@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import cn.icomon.icdevicemanager.model.other.ICConstant
 import com.example.bodycomposition.R
 import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.dao.AppDatabase
@@ -206,7 +207,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
 
                     if (user != null) {
                         // TODO: update userInfo
-                        viewModel.setUserInfo(UserInfo(user.date!!, user.height!!, user.name!!, 0))
+                        viewModel.setUserInfo(UserInfo(user.date!!, user.height!!, user.name!!, ICConstant.ICSexType.ICSexTypeUnknown))
                         viewModel.setUserType(UserType.AUTH)
 
                         Log.d(TAG, "Distance: $distance Name: ${user.name}")

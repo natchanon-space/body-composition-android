@@ -25,7 +25,7 @@ object RequirePermissions {
                 add(Manifest.permission.ACCESS_COARSE_LOCATION)
                 add(Manifest.permission.ACCESS_FINE_LOCATION)
                 // android version >= 12
-                add(Manifest.permission.BLUETOOTH_CONNECT)
+                // add(Manifest.permission.BLUETOOTH_CONNECT)
             }
         }.toTypedArray()
 

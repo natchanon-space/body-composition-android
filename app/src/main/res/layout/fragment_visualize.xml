@@ -67,6 +67,13 @@
             android:text="TextView" />
 
         <TextView
+            android:id="@+id/sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="TextView" />
+
+        <TextView
             android:id="@+id/bleState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
