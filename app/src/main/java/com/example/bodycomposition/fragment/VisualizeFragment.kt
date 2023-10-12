@@ -66,9 +66,6 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
             ICSexType.ICSexTypeFemal -> binding.sex.text = "Female"
         }
 
-        binding.deleteButton.isEnabled = false
-        binding.addButton.isEnabled = true
-
         Log.d(TAG, "data in viewModel name: ${viewModel.userInfo.value?.name} height: ${viewModel.userInfo.value?.height} dob: ${viewModel.userInfo.value?.dateOfBirth}")
 
         EventMgr.addEvent("SCAN", this)
@@ -81,7 +78,11 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
     }
 
     fun deleteDevice() {
-
+        if (device != null) {
+            ICDeviceManager.shared().removeDevice(
+                device
+            ) { device, code -> addLog("delete device state : $code") }
+        }
     }
 
     companion object {
