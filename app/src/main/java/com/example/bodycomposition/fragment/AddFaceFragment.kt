@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import cn.icomon.icdevicemanager.model.other.ICConstant
 import com.example.bodycomposition.R
 import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.dao.AppDatabase
@@ -63,11 +64,17 @@ class AddFaceFragment : BaseFragment<FragmentAddFaceBinding>() {
             return
         }
 
+        val sex: String = when (binding.spinner.getSelectedItemValue()) {
+            ICConstant.ICSexType.ICSexTypeUnknown -> "Unspecified"
+            ICConstant.ICSexType.ICSexTypeMale -> "Male"
+            ICConstant.ICSexType.ICSexTypeFemal -> "Female"
+        }
+
         Log.d(TAG, "TEST FLOAT_ARRAY[0] ${viewModel.faceVector.value?.get(0)}")
 
         // Accessing database with coroutine scope
         lifecycleScope.launch(Dispatchers.IO) {
-            dao.insertAll(User(0, name, Integer.parseInt(height), binding.datePicker.getLocalDate(), viewModel.faceVector.value))
+            dao.insertAll(User(0, name, Integer.parseInt(height), binding.datePicker.getLocalDate(), sex, viewModel.faceVector.value))
             Log.d(TAG, dao.getAll().size.toString())
 
             // Check if data is added

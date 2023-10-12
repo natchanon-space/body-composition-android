@@ -12,6 +12,7 @@ data class User(
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "height") val height: Int?,
     @ColumnInfo(name = "date_of_birth") val date: LocalDate?,
+    @ColumnInfo(name = "sex") val sex: String?,
     @ColumnInfo(name = "faceVector") val faceVector: FloatArray?
 ) {
     override fun equals(other: Any?): Boolean {
@@ -24,6 +25,7 @@ data class User(
         if (name != other.name) return false
         if (height != other.height) return false
         if (date != other.date) return false
+        if (sex != other.sex) return false
         if (faceVector != null) {
             if (other.faceVector == null) return false
             if (!faceVector.contentEquals(other.faceVector)) return false
@@ -37,6 +39,7 @@ data class User(
         result = 31 * result + (name?.hashCode() ?: 0)
         result = 31 * result + (height ?: 0)
         result = 31 * result + (date?.hashCode() ?: 0)
+        result = 31 * result + (sex?.hashCode() ?: 0)
         result = 31 * result + (faceVector?.contentHashCode() ?: 0)
         return result
     }

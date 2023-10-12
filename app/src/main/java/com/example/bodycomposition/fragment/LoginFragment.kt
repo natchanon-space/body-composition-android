@@ -207,7 +207,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
 
                     if (user != null) {
                         // TODO: update userInfo
-                        viewModel.setUserInfo(UserInfo(user.date!!, user.height!!, user.name!!, ICConstant.ICSexType.ICSexTypeUnknown))
+                        val sex = when (user.sex!!) {
+                            "Unspecified" -> ICConstant.ICSexType.ICSexTypeUnknown
+                            "Male" -> ICConstant.ICSexType.ICSexTypeMale
+                            "Female" -> ICConstant.ICSexType.ICSexTypeFemal
+                            else -> {ICConstant.ICSexType.ICSexTypeUnknown}
+                        }
+                        viewModel.setUserInfo(UserInfo(user.date!!, user.height!!, user.name!!, sex!!))
                         viewModel.setUserType(UserType.AUTH)
 
                         Log.d(TAG, "Distance: $distance Name: ${user.name}")

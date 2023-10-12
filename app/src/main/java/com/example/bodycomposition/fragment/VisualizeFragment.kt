@@ -9,7 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import cn.icomon.icdevicemanager.model.device.ICDevice
 import cn.icomon.icdevicemanager.model.device.ICScanDeviceInfo
-import cn.icomon.icdevicemanager.model.other.ICConstant.ICSexType
+import cn.icomon.icdevicemanager.model.other.ICConstant.*
 import com.example.bodycomposition.R
 import com.example.bodycomposition.component.BaseFragment
 import com.example.bodycomposition.databinding.FragmentVisualizeBinding

@@ -8,4 +8,8 @@ data class UserInfo(
     var height: Int,
     var name: String,
     var sex: ICConstant.ICSexType
-)
+) {
+    companion object {
+
+    }
+}
