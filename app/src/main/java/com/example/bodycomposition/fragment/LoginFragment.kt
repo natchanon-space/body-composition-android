@@ -205,7 +205,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
                     }
 
                     if (user != null) {
-                        viewModel.setUserInfo(UserInfo(user.date!!, user.height!!, user.name!!))
+                        // TODO: update userInfo
+                        viewModel.setUserInfo(UserInfo(user.date!!, user.height!!, user.name!!, 0))
                         viewModel.setUserType(UserType.AUTH)
 
                         Log.d(TAG, "Distance: $distance Name: ${user.name}")

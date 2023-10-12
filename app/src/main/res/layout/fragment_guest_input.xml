@@ -58,6 +58,12 @@
                     android:hint="Date of Birth" />
             </com.example.bodycomposition.component.DatePickerLayout>
 
+            <com.example.bodycomposition.component.SexSpinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
         </LinearLayout>
 
         <Button

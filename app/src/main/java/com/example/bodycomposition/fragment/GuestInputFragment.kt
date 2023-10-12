@@ -46,8 +46,9 @@ class GuestInputFragment : BaseFragment<FragmentGuestInputBinding>() {
             return
         }
 
+        // TODO: update userInfo
         viewModel.setUserType(UserType.GUEST)
-        viewModel.setUserInfo(UserInfo(binding.datePicker.getLocalDate()!!, height.toInt(), "Guest"))
+        viewModel.setUserInfo(UserInfo(binding.datePicker.getLocalDate()!!, height.toInt(), "Guest", 0))
 
         findNavController().navigate(R.id.action_guestInputFragment_to_visualizeFragment)
     }
