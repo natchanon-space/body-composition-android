@@ -160,7 +160,7 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
         if (data!!.isStabilized) {
             if (data!!.imp.toInt() != 0) {
                 val t = String.format(
-                    "bmi=%.2f,body fat=%.2f,muscle=%.2f,water=%.2f,bone=%.2f,protein=%.2f,bmr=%d,visceral=%.2f,skeletal muscle=%.2f,physical age=%d",
+                    "bmi=%.2f,body fat=%.2f,muscle=%.2f,water=%.2f,bone=%.2f,protein=%.2f,bmr=%d,visceral=%.2f,skeletal muscle=%.2f,physical age=%d, imp=%.2f, imp2=%.2f, imp3=%.2f, imp4=%.2f, imp5=%.2f, data_cal_type=%d",
                     data.bmi,
                     data.bodyFatPercent,
                     data.musclePercent,
@@ -171,6 +171,12 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
                     data.visceralFat,
                     data.smPercent,
                     data.physicalAge.toInt(),
+                    data.imp,
+                    data.imp2,
+                    data.imp3,
+                    data.imp4,
+                    data.imp5,
+                    data.data_calc_type
                 )
                 addLog(t)
             }
