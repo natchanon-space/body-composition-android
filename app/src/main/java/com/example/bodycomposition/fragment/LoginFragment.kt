@@ -1,14 +1,12 @@
 package com.example.bodycomposition.fragment
 
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
@@ -80,14 +78,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
     }
 
     fun takePhoto() {
-        // TODO: Implement login method
-        Toast.makeText(requireContext(), "Login button pressed!", Toast.LENGTH_SHORT).show()
         Log.d(TAG, "Login button pressed!")
 
         imageCapture?.takePicture(
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageCapturedCallback() {
-                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onCaptureSuccess(imageProxy: ImageProxy) {
                     Log.d(TAG, "==TAKE PICTURE STARTING==")
 

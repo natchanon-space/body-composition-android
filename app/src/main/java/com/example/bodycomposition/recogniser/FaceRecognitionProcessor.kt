@@ -6,9 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.RectF
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.PreviewView
 import com.example.bodycomposition.component.BBoxOverlay
@@ -75,16 +73,17 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
     /**
      * Return cropped biggest face for face recognition process
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     @androidx.camera.core.ExperimentalGetImage
-    fun cropBiggestFace(imageProxy: ImageProxy): Pair<Bitmap?, FloatArray?> {
+    fun cropBiggestFace(imageProxy: ImageProxy) {
 
         Log.d(TAG, "==START CROP BIGGEST FACE==")
 
         val rotationDegrees = imageProxy.imageInfo.rotationDegrees
 
-        val bitmap = imageProxy.toBitmap()
-        val inputImage = InputImage.fromBitmap(bitmap, 0)
+        var bitmap = imageProxy.toBitmap()
+        bitmap = flipBitmap(rotateBitmap(bitmap, rotationDegrees))
+
+        val inputImage = InputImage.fromMediaImage(imageProxy.image!!, rotationDegrees)
 
         Log.d(TAG, "(cropBiggestFace) Original w:${bitmap.width} h:${bitmap.height}")
 
@@ -106,7 +105,6 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
 
                     if (croppedBitmap != null) {
                         Log.d(TAG, "(cropBiggestFace) Cropped w:${croppedBitmap!!.width} h:${croppedBitmap!!.height}")
-                        croppedBitmap = flipBitmap(rotateBitmap(croppedBitmap!!, rotationDegrees))
 
                         // FaceNet
                         faceVector = faceNetInterpreter.getFaceVector(croppedBitmap!!)
@@ -125,8 +123,6 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
                 Log.d(TAG, "cropped image is null: ${croppedBitmap == null}")
                 callback.onFaceDetected(croppedBitmap, faceVector)
             }
-
-        return croppedBitmap to faceVector
     }
 
     private fun Rect.transform(width: Int, height: Int, previewView: PreviewView): RectF {
