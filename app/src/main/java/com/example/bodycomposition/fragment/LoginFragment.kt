@@ -153,16 +153,21 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
     }
 
     override fun onFaceDetected(faceBitmap: Bitmap?, faceVector: FloatArray?) {
-        // TODO: find closest face and return user then navigate to registration
         Log.d(TAG, "onFaceDetected")
 
         val dao = db.userDao()
         var userList: List<User>? = null
 
+        if (faceVector == null) {
+            Log.d(TAG, "FaceVector is null: ${faceVector == null}")
+            Toast.makeText(requireContext(), "No face detected!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         lifecycleScope.launch(Dispatchers.IO) {
             suspend {
                 userList = dao.getAll()
-                Log.d(TAG, "1st: Retrieve user list")
+                Log.d(TAG, "1st: Retrieve user list (userList is null: ${userList == null})")
             }.invoke()
 
             lifecycleScope.launch(Dispatchers.Main) {

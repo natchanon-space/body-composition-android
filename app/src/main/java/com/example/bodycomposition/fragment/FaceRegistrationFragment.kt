@@ -107,7 +107,6 @@ import java.util.concurrent.ExecutorService
                 override fun onCaptureSuccess(imageProxy: ImageProxy) {
                     Log.d(TAG, "==TAKE PICTURE STARTING==")
 
-
                     Log.d(TAG, "Suspend 1: crop image")
                     faceRecognitionProcessor.cropBiggestFace(imageProxy)
                 }

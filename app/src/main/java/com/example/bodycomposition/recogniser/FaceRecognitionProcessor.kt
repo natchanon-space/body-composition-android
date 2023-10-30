@@ -64,7 +64,7 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
                     faceBounds.add(face.boundingBox.transform(width, height, previewView!!))
                 }
                 overlay!!.drawBox(faceBounds)
-                    imageProxy.close()
+                imageProxy.close()
             }
             .addOnFailureListener {
                 Log.e(TAG, it.toString(), it)
@@ -94,10 +94,10 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
         detector.process(inputImage)
             .addOnSuccessListener {faces ->
                 Log.d(TAG, "(cropBiggestFace) Begin processing")
+                Log.d(TAG, "len faces ${faces.size}")
+
                 if (faces.size > 0) {
                     // TODO: change to return biggest face
-
-                    // TODO: use FaceNet and extract face vector on this
 
                     Log.d(TAG, "FACE[0]: ${faces[0].boundingBox}")
                     val face = faces[0]
@@ -108,6 +108,7 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
                         Log.d(TAG, "(cropBiggestFace) Cropped w:${croppedBitmap!!.width} h:${croppedBitmap!!.height}")
                         croppedBitmap = flipBitmap(rotateBitmap(croppedBitmap!!, rotationDegrees))
 
+                        // FaceNet
                         faceVector = faceNetInterpreter.getFaceVector(croppedBitmap!!)
                         Log.d(TAG, "Complete?? $faceVector")
                     } else {
@@ -121,6 +122,7 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
                 }
             }
             .addOnCompleteListener {
+                Log.d(TAG, "cropped image is null: ${croppedBitmap == null}")
                 callback.onFaceDetected(croppedBitmap, faceVector)
             }
 
