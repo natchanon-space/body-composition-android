@@ -27,7 +27,9 @@
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_visualizeFragment"
-            app:destination="@id/visualizeFragment" />
+            app:destination="@id/visualizeFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/guestInputFragment"
@@ -36,7 +38,9 @@
         tools:layout="@layout/fragment_guest_input" >
         <action
             android:id="@+id/action_guestInputFragment_to_visualizeFragment"
-            app:destination="@id/visualizeFragment" />
+            app:destination="@id/visualizeFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/visualizeFragment"

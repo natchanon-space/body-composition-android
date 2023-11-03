@@ -44,8 +44,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
 
     private var imageCapture: ImageCapture? = null
 
-    private lateinit var cameraExecutor: ExecutorService
-
     private lateinit var faceRecognitionProcessor: FaceRecognitionProcessor
 
     override fun inflateViewBinding(
@@ -126,7 +124,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
             try {
                 // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
-
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageCapture, imageAnalysis)
@@ -138,9 +135,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        cameraExecutor.shutdown()
+    override fun onResume() {
+        super.onResume()
+        startCamera()
     }
 
     override fun analyze(imageProxy: ImageProxy) {

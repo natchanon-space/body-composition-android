@@ -26,7 +26,6 @@ import com.example.bodycomposition.model.DataViewModel
 import com.example.bodycomposition.recogniser.FaceRecognitionProcessor
 import com.example.bodycomposition.recogniser.FaceRecognitionProcessor.FaceRecognitionCallback
 import com.example.bodycomposition.utils.RequirePermissions
-import java.util.concurrent.ExecutorService
 
 
 @ExperimentalGetImage class FaceRegistrationFragment : BaseFragment<FragmentFaceRegistrationBinding>(), ImageAnalysis.Analyzer, FaceRecognitionCallback {
@@ -34,8 +33,6 @@ import java.util.concurrent.ExecutorService
     private val viewModel: DataViewModel by activityViewModels()
 
     private var imageCapture: ImageCapture? = null
-
-    private lateinit var cameraExecutor: ExecutorService
 
     private lateinit var faceRecognitionProcessor: FaceRecognitionProcessor
 
@@ -90,6 +87,8 @@ import java.util.concurrent.ExecutorService
 
             try {
                 // Unbind use cases before rebinding
+                cameraProvider.unbindAll()
+                // Rebind use cases
                 cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageCapture, imageAnalysis
                 )
@@ -119,9 +118,9 @@ import java.util.concurrent.ExecutorService
         )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        cameraExecutor.shutdown()
+    override fun onResume() {
+        super.onResume()
+        startCamera()
     }
 
     override fun analyze(imageProxy: ImageProxy) {
