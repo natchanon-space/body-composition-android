@@ -11,6 +11,7 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.view.PreviewView
 import com.example.bodycomposition.component.BBoxOverlay
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
@@ -99,9 +100,20 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
                     // TODO: change to return biggest face
 
                     Log.d(TAG, "FACE[0]: ${faces[0].boundingBox}")
-                    val face = faces[0]
-                    croppedBitmap = cropToBBox(bitmap, face.boundingBox)
+                    var face = faces[0]
 
+                    if (faces.size > 1) {
+                        Log.d(TAG, "find largest face!")
+
+                        for (i in 1 until faces.size) {
+                            if (faceArea(face) < faceArea(faces[i])) {
+                                face = faces[i]
+                            }
+                        }
+                    }
+
+                    Log.d(TAG, "Final bounding box = ${face.boundingBox}")
+                    croppedBitmap = cropToBBox(bitmap, face.boundingBox)
 
                     if (croppedBitmap != null) {
                         Log.d(TAG, "(cropBiggestFace) Cropped w:${croppedBitmap!!.width} h:${croppedBitmap!!.height}")
@@ -153,6 +165,10 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
             height = image.height - boundingBox.top
         }
         return Bitmap.createBitmap(image, boundingBox.left, boundingBox.top, width, height)
+    }
+
+    private fun faceArea(face: Face): Int {
+        return face.boundingBox.width() * face.boundingBox.height()
     }
 
     private fun ImageProxy.toBitmap(): Bitmap {
