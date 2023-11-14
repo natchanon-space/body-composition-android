@@ -16,6 +16,7 @@ import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
+import kotlin.math.abs
 
 class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, previewView: PreviewView? = null, callback: FaceRecognitionCallback) {
 
@@ -53,9 +54,11 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
 
         val inputImage = InputImage.fromMediaImage(image!!, rotationDegrees)
 
-        val reverseDimens = rotationDegrees == 90 || rotationDegrees == 270
-        val width = if (reverseDimens) imageProxy.height else imageProxy.width
-        val height = if (reverseDimens) imageProxy.width else imageProxy.height
+        val isPortrait = rotationDegrees == 90 || rotationDegrees == 270
+        val width = if (isPortrait ) imageProxy.height else imageProxy.width
+        val height = if (isPortrait ) imageProxy.width else imageProxy.height
+
+        Log.d(TAG, "Portrait?: $isPortrait")
 
         detector.process(inputImage)
             .addOnSuccessListener { faces ->
@@ -155,7 +158,17 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
         val scaledRight = scaleX * flippedRight
         val scaledBottom = scaleY * bottom
 
-        return RectF(scaledLeft, scaleTop, scaledRight, scaledBottom)
+        if (rotationDegrees == 90 || rotationDegrees == 270)
+            return RectF(scaledLeft, scaleTop, scaledRight, scaledBottom)
+
+        // TODO: change this temporary for landscape to proper rotated box
+        val n = abs((width - height)/2)
+        return RectF(
+            scaleX * (flippedLeft),
+            scaleY * (top - n),
+            scaleX * (flippedRight),
+            scaleY * (bottom + n)
+        )
     }
 
     private fun cropToBBox(image: Bitmap, boundingBox: Rect): Bitmap? {
