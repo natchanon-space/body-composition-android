@@ -80,6 +80,8 @@
         tools:layout="@layout/fragment_scan_device" >
         <action
             android:id="@+id/action_scanDeviceFragment_to_visualizeFragment"
-            app:destination="@id/visualizeFragment" />
+            app:destination="@id/visualizeFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 </navigation>
