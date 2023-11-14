@@ -84,10 +84,10 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
         Log.d(TAG, "FOCUS HERE: rotationDegrees $rotationDegrees")
 
         var bitmap = imageProxy.toBitmap()
-//        bitmap = flipBitmap(rotateBitmap(bitmap, rotationDegrees))
-        bitmap = flipBitmap(bitmap)
 
-        val inputImage = InputImage.fromMediaImage(imageProxy.image!!, rotationDegrees)
+        bitmap = flipBitmap(rotateBitmap(bitmap, rotationDegrees))
+
+        val inputImage = InputImage.fromBitmap(bitmap!!, 0)
 
         Log.d(TAG, "(cropBiggestFace) Original w:${bitmap.width} h:${bitmap.height}")
 
