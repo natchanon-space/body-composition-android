@@ -58,7 +58,9 @@
         tools:layout="@layout/fragment_face_registration" >
         <action
             android:id="@+id/action_faceRegistrationFragment_to_addFaceFragment"
-            app:destination="@id/addFaceFragment" />
+            app:destination="@id/addFaceFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/addFaceFragment"
@@ -67,7 +69,9 @@
         tools:layout="@layout/fragment_add_face" >
         <action
             android:id="@+id/action_addFaceFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/scanDeviceFragment"

@@ -1,13 +1,11 @@
 package com.example.bodycomposition.fragment
 
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
@@ -60,6 +58,8 @@ import com.example.bodycomposition.utils.RequirePermissions
         } else {
             RequirePermissions.requestPermissions(this)
         }
+
+        Log.d(TAG, "FACE REGISTRATION FRAGMENT CREATED!")
     }
 
     private fun startCamera() {
@@ -76,12 +76,15 @@ import com.example.bodycomposition.utils.RequirePermissions
                     it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
                 }
 
+//            var orientation = (context as Activity).windowManager.defaultDisplay.rotation
+
             imageCapture = ImageCapture.Builder().build()
 
             val imageAnalysis = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build()
-            imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(requireContext()), this)
+                .build().also {
+                    it.setAnalyzer(ContextCompat.getMainExecutor(requireContext()), this)
+                }
 
             val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
 
@@ -102,7 +105,6 @@ import com.example.bodycomposition.utils.RequirePermissions
         imageCapture?.takePicture(
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageCapturedCallback() {
-                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onCaptureSuccess(imageProxy: ImageProxy) {
                     Log.d(TAG, "==TAKE PICTURE STARTING==")
 

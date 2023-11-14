@@ -1,5 +1,6 @@
 package com.example.bodycomposition.recogniser
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -60,7 +61,7 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
             .addOnSuccessListener { faces ->
                 val faceBounds: MutableList<RectF> = arrayListOf()
                 for (face in faces) {
-                    faceBounds.add(face.boundingBox.transform(width, height, previewView!!))
+                    faceBounds.add(face.boundingBox.transform(width, height, rotationDegrees, previewView!!))
                 }
                 overlay!!.drawBox(faceBounds)
                 imageProxy.close()
@@ -80,9 +81,11 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
         Log.d(TAG, "==START CROP BIGGEST FACE==")
 
         val rotationDegrees = imageProxy.imageInfo.rotationDegrees
+        Log.d(TAG, "FOCUS HERE: rotationDegrees $rotationDegrees")
 
         var bitmap = imageProxy.toBitmap()
-        bitmap = flipBitmap(rotateBitmap(bitmap, rotationDegrees))
+//        bitmap = flipBitmap(rotateBitmap(bitmap, rotationDegrees))
+        bitmap = flipBitmap(bitmap)
 
         val inputImage = InputImage.fromMediaImage(imageProxy.image!!, rotationDegrees)
 
@@ -137,10 +140,10 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
             }
     }
 
-    private fun Rect.transform(width: Int, height: Int, previewView: PreviewView): RectF {
+    private fun Rect.transform(width: Int, height: Int, rotationDegrees: Int, previewView: PreviewView): RectF {
         // TODO: handle screen rotation
-        val scaleX = previewView.width / width.toFloat()
-        val scaleY = previewView.height / height.toFloat()
+        var scaleX = previewView.width / width.toFloat()
+        var scaleY = previewView.height / height.toFloat()
 
         // Flip for front camera len
         val flippedLeft = width - right
@@ -156,6 +159,14 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
     }
 
     private fun cropToBBox(image: Bitmap, boundingBox: Rect): Bitmap? {
+
+        var orientation = (previewView?.context as Activity).windowManager.defaultDisplay.rotation
+
+        Log.d(TAG, "======CROPPING======")
+        Log.d(TAG, "Orientation $orientation")
+        Log.d(TAG, "image w: ${image.width} h: ${image.height}")
+        Log.d(TAG, "bounding box w: ${boundingBox.width()} h: ${boundingBox.height()}")
+
         var width = boundingBox.width()
         var height = boundingBox.height()
         if ((boundingBox.left + width) > image.width) {
@@ -182,6 +193,7 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
     private fun rotateBitmap(bitmap: Bitmap, rotationDegree: Int): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(rotationDegree.toFloat())
+        Log.d(TAG, "ROTATE BITMAP AT $rotationDegree")
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, false)
     }
 

@@ -33,7 +33,7 @@ import com.example.bodycomposition.utils.UserInfo
 import com.example.bodycomposition.utils.UserType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.concurrent.ExecutorService
+
 
 @ExperimentalGetImage
 class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyzer, FaceRecognitionProcessor.FaceRecognitionCallback {
@@ -75,27 +75,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
         }
     }
 
-    fun takePhoto() {
-        Log.d(TAG, "Login button pressed!")
-
-        imageCapture?.takePicture(
-            ContextCompat.getMainExecutor(requireContext()),
-            object : ImageCapture.OnImageCapturedCallback() {
-                override fun onCaptureSuccess(imageProxy: ImageProxy) {
-                    Log.d(TAG, "==TAKE PICTURE STARTING==")
-
-                    Log.d(TAG, "Suspend 1: crop image")
-                    faceRecognitionProcessor.cropBiggestFace(imageProxy)
-                }
-
-                override fun onError(exception: ImageCaptureException) {
-                    super.onError(exception)
-                    Log.d(TAG, "Image capture error!", exception)
-                }
-            }
-        )
-    }
-
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
@@ -133,6 +112,27 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(), ImageAnalysis.Analyz
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))
+    }
+
+    fun takePhoto() {
+        Log.d(TAG, "Login button pressed!")
+
+        imageCapture?.takePicture(
+            ContextCompat.getMainExecutor(requireContext()),
+            object : ImageCapture.OnImageCapturedCallback() {
+                override fun onCaptureSuccess(imageProxy: ImageProxy) {
+                    Log.d(TAG, "==TAKE PICTURE STARTING==")
+
+                    Log.d(TAG, "Suspend 1: crop image")
+                    faceRecognitionProcessor.cropBiggestFace(imageProxy)
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    super.onError(exception)
+                    Log.d(TAG, "Image capture error!", exception)
+                }
+            }
+        )
     }
 
     override fun onResume() {

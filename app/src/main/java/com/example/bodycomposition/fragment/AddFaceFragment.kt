@@ -1,6 +1,7 @@
 package com.example.bodycomposition.fragment
 
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,6 +33,11 @@ class AddFaceFragment : BaseFragment<FragmentAddFaceBinding>() {
         return FragmentAddFaceBinding.inflate(inflater, container, false)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d(TAG, "CREATED!")
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun bindData() {
         binding.apply {
@@ -44,6 +50,14 @@ class AddFaceFragment : BaseFragment<FragmentAddFaceBinding>() {
 
         db = AppDatabase.getDatabase(requireContext())
 
+        Log.d(TAG, "set binding")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onResume() {
+        super.onResume()
+        
+        Log.d(TAG, "resumed!")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
