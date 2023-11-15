@@ -57,18 +57,24 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
         }
 
         val currentUserInfo: UserInfo = viewModel.userInfo.value!!
-        binding.name.text = currentUserInfo.name
-        binding.height.text = currentUserInfo.height.toString()
-        binding.date.text = currentUserInfo.dateOfBirth.format(DateTimeFormatter.ofPattern(DATE_FORMAT))
+        binding.name.text = "name: " + currentUserInfo.name
+        binding.height.text = "height: " + currentUserInfo.height.toString() + " cm."
+        binding.date.text = "date of birth: " + currentUserInfo.dateOfBirth.format(DateTimeFormatter.ofPattern(DATE_FORMAT))
         when (currentUserInfo.sex) {
-            ICSexType.ICSexTypeUnknown -> binding.sex.text = "Unspecified"
-            ICSexType.ICSexTypeMale -> binding.sex.text = "Male"
-            ICSexType.ICSexTypeFemal -> binding.sex.text = "Female"
+            ICSexType.ICSexTypeUnknown -> binding.sex.text = "sex: Unspecified"
+            ICSexType.ICSexTypeMale -> binding.sex.text = "sex: Male"
+            ICSexType.ICSexTypeFemal -> binding.sex.text = "sex: Female"
         }
 
         Log.d(TAG, "data in viewModel name: ${viewModel.userInfo.value?.name} height: ${viewModel.userInfo.value?.height} dob: ${viewModel.userInfo.value?.dateOfBirth}")
 
         EventMgr.addEvent("SCAN", this)
+
+        if (viewModel.deviceMcAddress.value != null) {
+            binding.deviceName.text = viewModel.deviceMcAddress.value
+        } else {
+            binding.deviceName.text = "None"
+        }
 
         initSDK()
     }
@@ -78,11 +84,16 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
     }
 
     fun deleteDevice() {
-        if (device != null) {
-            ICDeviceManager.shared().removeDevice(
-                device
-            ) { device, code -> addLog("delete device state : $code") }
+        Log.d(TAG, "deleteDevice Clicked! device is null?: ${device == null}")
+        if (device == null) {
+            device = ICDevice()
         }
+        device!!.setMacAddr(viewModel.deviceMcAddress.value)
+        ICDeviceManager.shared().removeDevice(device) {
+            device, code -> addLog("delete device state: $code")
+        }
+        viewModel.setDeviceMcAddress(null)
+        binding.deviceName.text = "None"
     }
 
     companion object {
@@ -91,24 +102,35 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
 
     private fun addLog(string: String) {
         binding.bleState.text = string
+        Log.d(TAG, string)
     }
 
     /**
      * EventMgr.Event
      */
     override fun onCallBack(obj: Any?) {
+        Log.d(TAG, "onCallBack called!")
+
         deviceInfo = obj as ICScanDeviceInfo
         Log.d(TAG, "Device type: ${deviceInfo!!.getType().name}")
 
         if (device == null) {
             device = ICDevice()
         }
-        device!!.setMacAddr(deviceInfo!!.getMacAddr())
+        deviceInfo!!.getMacAddr().also {
+            viewModel.setDeviceMcAddress(it)
+            device!!.setMacAddr(it)
+        }
 
         // Add device on call back event
         ICDeviceManager.shared().addDevice(device) { device, code ->
             addLog("add device state : $code")
         }
+
+        // Set Device Name
+        binding.deviceName.text = device!!.getMacAddr()
+        Log.d(TAG, device!!.getMacAddr())
+        Log.d(TAG, viewModel!!.deviceMcAddress.value.toString())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -157,10 +179,12 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
     }
 
     override fun onReceiveWeightData(device: ICDevice?, data: ICWeightData?) {
+        binding.data.text = "Weight = ${data!!.weight_kg}"
         if (data!!.isStabilized) {
             if (data!!.imp.toInt() != 0) {
                 val t = String.format(
-                    "bmi=%.2f,body fat=%.2f,muscle=%.2f,water=%.2f,bone=%.2f,protein=%.2f,bmr=%d,visceral=%.2f,skeletal muscle=%.2f,physical age=%d, imp=%.2f, imp2=%.2f, imp3=%.2f, imp4=%.2f, imp5=%.2f, data_cal_type=%d",
+                    "weight=%.2f,\nbmi=%.2f,\nbody fat=%.2f,\nmuscle=%.2f,\nwater=%.2f,\nbone=%.2f,\nprotein=%.2f,\nbmr=%d,\nvisceral=%.2f,\nskeletal muscle=%.2f,\nphysical age=%d,\nimp=%.2f,\nimp2=%.2f,\nimp3=%.2f,\nimp4=%.2f,\nimp5=%.2f,\ndata_cal_type=%d",
+                    data.weight_kg,
                     data.bmi,
                     data.bodyFatPercent,
                     data.musclePercent,
@@ -178,7 +202,8 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
                     data.imp5,
                     data.data_calc_type
                 )
-                addLog(t)
+                addLog("Data received!")
+                binding.data.text = t
             }
         }
     }
@@ -252,10 +277,12 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
 
             ICMeasureStep.ICMeasureStepAdcStart -> {
                 addLog(device!!.getMacAddr() + ": start imp... ")
+                binding.data.text = "measuring..."
             }
 
             ICMeasureStep.ICMeasureStepAdcResult -> {
                 addLog(device!!.getMacAddr() + ": imp over")
+                binding.data.text = "measuring over"
             }
 
             ICMeasureStep.ICMeasureStepHrStart -> {

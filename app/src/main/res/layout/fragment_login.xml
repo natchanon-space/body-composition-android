@@ -38,7 +38,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="32dp"
             android:onClick="@{() -> loginFragment.takePhoto()}"
-            android:text="Capture"
+            android:text="Login"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

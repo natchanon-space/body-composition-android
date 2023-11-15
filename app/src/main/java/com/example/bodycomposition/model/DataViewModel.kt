@@ -23,6 +23,9 @@ class DataViewModel: ViewModel() {
     private val _userType = MutableLiveData<UserType>()
     val userType: LiveData<UserType> = _userType
 
+    private val _deviceMcAddress = MutableLiveData<String>()
+    val deviceMcAddress: LiveData<String> = _deviceMcAddress
+
     fun setFaceBitmap(bitmap: Bitmap) {
         _faceBitmap.value = bitmap
     }
@@ -41,4 +44,7 @@ class DataViewModel: ViewModel() {
         _userType.postValue(userType)
     }
 
+    fun setDeviceMcAddress(address: String?) {
+        _deviceMcAddress.value = address
+    }
 }

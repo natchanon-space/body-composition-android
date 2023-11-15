@@ -46,6 +46,7 @@ class ScanDeviceFragment : BaseFragment<FragmentScanDeviceBinding>(), ICScanDevi
                 ICDeviceManager.shared().stopScan()
                 val device = _devices[i]
                 EventMgr.post("SCAN", device)
+                findNavController().navigate(R.id.action_scanDeviceFragment_to_visualizeFragment)
             }
 
         ICDeviceManager.shared().scanDevice(this)
