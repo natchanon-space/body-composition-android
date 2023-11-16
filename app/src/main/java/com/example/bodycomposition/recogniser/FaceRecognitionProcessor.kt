@@ -188,7 +188,12 @@ class FaceRecognitionProcessor(context: Context, overlay: BBoxOverlay? = null, p
         if ((boundingBox.top + height) > image.height) {
             height = image.height - boundingBox.top
         }
-        return Bitmap.createBitmap(image, boundingBox.left, boundingBox.top, width, height)
+
+        return try {
+            Bitmap.createBitmap(image, boundingBox.left, boundingBox.top, width, height)
+        } catch (e: IllegalArgumentException) {
+            null
+        }
     }
 
     private fun faceArea(face: Face): Int {
