@@ -3,7 +3,7 @@ package com.example.bodycomposition.component
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
-import android.view.View
+import android.view.View.OnFocusChangeListener
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import com.example.bodycomposition.utils.Constant.DATE_FORMAT
@@ -40,9 +40,19 @@ class DatePickerLayout(context: Context, attrs: AttributeSet?) : TextInputLayout
         }
 
         // Replace keyboard input with date picker
-        editText?.focusable = View.NOT_FOCUSABLE
-        editText?.setOnClickListener{
+        editText!!.showSoftInputOnFocus = false // prevent editText to show input keyboard
+        editText!!.setOnClickListener{
             picker.show(fragmentManager, TAG)
+        }
+        editText!!.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                picker.show(fragmentManager, TAG)
+            }
+        }
+
+        // Losing focus
+        picker.addOnPositiveButtonClickListener {
+            editText!!.clearFocus()
         }
     }
 

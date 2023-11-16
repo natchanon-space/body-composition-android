@@ -1,11 +1,14 @@
 package com.example.bodycomposition.component
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.widget.ArrayAdapter
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatSpinner
 import cn.icomon.icdevicemanager.model.other.ICConstant
 
+@RequiresApi(Build.VERSION_CODES.O)
 class SexSpinner(context: Context, attrs: AttributeSet?) : AppCompatSpinner(context, attrs) {
 
     private val items = arrayOf("Unspecified", "Male", "Female")
