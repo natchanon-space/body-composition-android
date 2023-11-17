@@ -72,8 +72,10 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
 
         if (viewModel.deviceMcAddress.value != null) {
             binding.deviceName.text = viewModel.deviceMcAddress.value
+            binding.data.text = "Connected!"
         } else {
             binding.deviceName.text = "None"
+            binding.data.text = "No device!"
         }
 
         initSDK()
@@ -101,7 +103,7 @@ class VisualizeFragment : BaseFragment<FragmentVisualizeBinding>(), ICDeviceMana
     }
 
     private fun addLog(string: String) {
-        binding.bleState.text = string
+//        binding.bleState.text = string
         Log.d(TAG, string)
     }
 
